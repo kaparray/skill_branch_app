@@ -37,24 +37,38 @@ class FullScreenImageState extends State<FullScreenImage> {
     feedBloc.setUserModel(widget.photo);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
-        child: Column(children: <Widget>[
-          _buildHeroImage(),
-          _buildDescription(),
-          if (feedBloc.altDescriptionFull != null)
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Text(
-                feedBloc.altDescriptionFull,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildHeroImage(),
+            const SizedBox(height: 11),
+            if (feedBloc.altDescriptionFull != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  feedBloc.altDescriptionFull,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Color(0xFF8E8E93),
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'Roboto',
+                    fontStyle: FontStyle.normal,
+                    fontSize: 14,
+                    height: 20 / 14,
+                    letterSpacing: 0.25,
+                  ),
+                ),
               ),
-            ),
-          _buildLikeButton(),
-          const SizedBox(height: 16),
-          _buildActionButton(),
-        ]),
+            const SizedBox(height: 9),
+            _buildPhotoMeta(),
+            const SizedBox(height: 17),
+            _buildActionButton(),
+          ],
+        ),
       ),
     );
   }
@@ -72,73 +86,116 @@ class FullScreenImageState extends State<FullScreenImage> {
 
   AppBar _buildAppBar() {
     return AppBar(
+      elevation: 0,
       leading: IconButton(
-        icon: Icon(CupertinoIcons.back, color: Colors.black),
+        icon: Icon(
+          CupertinoIcons.back,
+          color: Color(0xFF9FA8B3),
+        ),
         onPressed: feedBloc.pop,
       ),
       backgroundColor: Colors.white,
       centerTitle: true,
-      title: Text('Photo', style: TextStyle(color: Colors.black)),
+      title: Text(
+        'Photo',
+        style: TextStyle(
+          letterSpacing: -0.41,
+          color: Colors.black,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'Roboto',
+          fontStyle: FontStyle.normal,
+          fontSize: 17,
+          height: 22 / 17,
+        ),
+      ),
     );
   }
 
   Widget _buildHeroImage() {
     return Hero(
       tag: widget.heroTag,
-      child: CachedNetworkImage(
-        imageUrl: feedBloc.regularPhotoFull,
-        placeholder: (context, url) => Center(
-          child: const CircularProgressIndicator(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(17)),
+          child: Container(
+            color: Color(0xFFD2D2D2),
+            child: CachedNetworkImage(
+              imageUrl: widget.photo.urls.regular,
+              placeholder: (context, url) => Center(
+                child: CircularProgressIndicator(),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              fit: BoxFit.fill,
+            ),
+          ),
         ),
-        errorWidget: (context, url, error) => Icon(Icons.error),
-        fit: BoxFit.cover,
       ),
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildPhotoMeta() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: Row(
-        children: <Widget>[
-          _buildUserAvatar(),
-          const SizedBox(width: 6),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                feedBloc.nameFull,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(feedBloc.usernameFull),
-            ],
-          ),
-        ],
-      ),
-    );
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Row(
+          children: [
+            _buildUserAvatar(),
+            SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  feedBloc.nameFull,
+                  style: TextStyle(
+                    color: Color(0xFF000000),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                    fontStyle: FontStyle.normal,
+                    fontSize: 18,
+                    height: 23 / 18,
+                  ),
+                ),
+                Text(
+                  feedBloc.usernameFull,
+                  style: TextStyle(
+                    color: Color(0xFF8E8E93),
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'Roboto',
+                    fontStyle: FontStyle.normal,
+                    fontSize: 13,
+                    height: 18 / 13,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ));
   }
 
   Widget _buildActionButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        OutlineButton(
-          onPressed: () {
-            final downloadLink = feedBloc.downloadFull;
-            feedBloc.downloadPhoto(downloadLink);
-          },
-          child: Text('SAVE'),
-        ),
-        const SizedBox(width: 16),
-        OutlineButton(
-          onPressed: () {
-            final htmlFull = feedBloc.htmlFull;
-            feedBloc.launchUrl(htmlFull);
-          },
-          child: Text('VISIT'),
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Expanded(
+            child: _buildLikeButton(),
+          ),
+          Expanded(
+            child: _buildButton(() {
+              final downloadLink = feedBloc.downloadFull;
+              feedBloc.downloadPhoto(downloadLink);
+            }, 'Save'),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildButton(() {
+              final htmlFull = feedBloc.htmlFull;
+              feedBloc.launchUrl(htmlFull);
+            }, 'Visit'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -148,11 +205,39 @@ class FullScreenImageState extends State<FullScreenImage> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50),
         child: Container(
+          padding: EdgeInsets.symmetric(vertical: 1),
           height: _kImageSize,
           width: _kImageSize,
           child: CachedNetworkImage(
             imageUrl: feedBloc.profileImageLargeFull,
             fit: BoxFit.fill,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(Function onTap, String text) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        alignment: Alignment.center,
+        height: 36,
+        decoration: BoxDecoration(
+          color: Color(0xFF39CEFD),
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Color(0xFFFFFFFF),
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Roboto',
+            fontStyle: FontStyle.normal,
+            fontSize: 14,
+            height: 16 / 14,
+            letterSpacing: 0.75,
           ),
         ),
       ),
