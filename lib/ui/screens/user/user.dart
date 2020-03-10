@@ -8,7 +8,7 @@ import 'package:skill_branch_flutter/ui/screens/user/user_collections.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_photo.dart';
 
 const double _kBorderSidewidth = 3.0;
-const double _kUserImageHeight = 92.0;
+const double _kUserImageHeight = 72.0;
 
 enum UserPhotoType { userPhotos, likeUserPhotos, userCollections }
 
@@ -24,8 +24,7 @@ class UserProfile extends StatefulWidget {
   }
 }
 
-class UserProfileState extends State<UserProfile>
-    with SingleTickerProviderStateMixin {
+class UserProfileState extends State<UserProfile> with SingleTickerProviderStateMixin {
   UserBloc userBloc;
   TabController _tabController;
 
@@ -95,30 +94,93 @@ class UserProfileState extends State<UserProfile>
       stream: userBloc.userInfoStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    height: _kUserImageHeight,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(200),
-                      child: CachedNetworkImage(
-                        imageUrl: userBloc.largeProfileImage,
-                        fit: BoxFit.cover,
-                      ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(200),
+                    child: CachedNetworkImage(
+                      height: _kUserImageHeight,
+                      width: _kUserImageHeight,
+                      imageUrl: userBloc.largeProfileImage,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  _buildFollowers(),
+                  const SizedBox(width: 18),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildFollowers(),
+                      const SizedBox(height: 11),
+                      if (userBloc.location.isNotEmpty)
+                        Row(
+                          children: <Widget>[
+                            Image.asset(
+                              'assets/icons/maps-and-flags.png',
+                              width: 10,
+                              height: 13,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              userBloc.location,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                height: 18 / 13,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.normal,
+                                letterSpacing: -0.08,
+                                color: Color(0xFF000000),
+                              ),
+                            ),
+                          ],
+                        ),
+                      const SizedBox(width: 8),
+                      if (userBloc.portfolioUrl != null)
+                        GestureDetector(
+                          onTap: () => userBloc.launchUrl(),
+                          child: Row(
+                            children: <Widget>[
+                              Image.asset(
+                                'assets/icons/group.png',
+                                width: 10,
+                                height: 13,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                userBloc.portfolioUrl,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  height: 18 / 13,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.normal,
+                                  letterSpacing: -0.08,
+                                  color: Color(0xFF000000),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
               ),
-              const SizedBox(height: 12),
-              _buildDescription(),
-              Container(
-                width: double.infinity,
-                child: Text(userBloc.profileBio),
+              const SizedBox(height: 16),
+              Text(
+                userBloc.profileBio,
+                style: TextStyle(
+                  letterSpacing: -0.24,
+                  fontSize: 12,
+                  height: 20 / 12,
+                  fontWeight: FontWeight.w300,
+                  fontFamily: 'Roboto',
+                  fontStyle: FontStyle.normal,
+                ),
               ),
             ],
           ),
@@ -128,47 +190,62 @@ class UserProfileState extends State<UserProfile>
   }
 
   Widget _buildFollowers() {
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            userBloc.followersCount,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            userBloc.followingCount,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDescription() {
-    return Container(
-      width: double.infinity,
-      child: Row(
-        children: <Widget>[
-          if (userBloc.location.isNotEmpty) ...[
-            Icon(Icons.my_location),
-            Text(userBloc.location),
-          ],
-          const SizedBox(width: 8),
-          if (userBloc.portfolioUrl != null)
-            GestureDetector(
-              onTap: () => userBloc.launchUrl(),
-              child: Row(
-                children: [
-                  Icon(Icons.settings_ethernet),
-                  Text(userBloc.portfolioUrl),
-                ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              userBloc.followersCount,
+              style: const TextStyle(
+                fontSize: 23,
+                height: 23 / 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF16B9FD),
               ),
             ),
-        ],
-      ),
+            const SizedBox(height: 1),
+            Text(
+              'followers',
+              style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xFF000000),
+                  height: 18 / 13,
+                  fontWeight: FontWeight.normal,
+                  fontStyle: FontStyle.normal,
+                  fontFamily: 'Roboto'),
+            ),
+          ],
+        ),
+        const SizedBox(width: 18),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              userBloc.followingCount,
+              style: const TextStyle(
+                fontSize: 23,
+                height: 23 / 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF16B9FD),
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              'following',
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xFF000000),
+                  height: 18 / 13,
+                  fontStyle: FontStyle.normal,
+                  fontFamily: 'Roboto'),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -184,12 +261,20 @@ class UserProfileState extends State<UserProfile>
       ),
       labelColor: Colors.blue,
       unselectedLabelColor: Colors.blue[300].withOpacity(0.75),
-      tabs: List.generate(
-        3,
-        (int index) => Tab(
-          child: Icon(Icons.home),
+      tabs: [
+        Padding(
+          padding: EdgeInsets.all(12),
+          child: Image.asset('assets/icons/home.png', color: Colors.black),
         ),
-      ),
+        Padding(
+          padding: EdgeInsets.all(12),
+          child: Image.asset('assets/icons/like.png'),
+        ),
+        Padding(
+          padding: EdgeInsets.all(12),
+          child: Image.asset('assets/icons/bookmark.png'),
+        ),
+      ],
     );
   }
 }

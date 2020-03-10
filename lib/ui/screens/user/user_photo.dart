@@ -19,21 +19,19 @@ class UserPhoto extends StatefulWidget {
   }
 }
 
-class UserPhotoState extends State<UserPhoto>
-    with AutomaticKeepAliveClientMixin<UserPhoto> {
+class UserPhotoState extends State<UserPhoto> with AutomaticKeepAliveClientMixin<UserPhoto> {
   @override
   bool get wantKeepAlive => true;
-
-  
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
     return PagewiseGridView.count(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 21),
       crossAxisCount: 3,
-      mainAxisSpacing: 2,
-      crossAxisSpacing: 2,
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
       childAspectRatio: 1,
       pageSize: 12,
       pageFuture: (int pageIndex) async {
@@ -64,21 +62,25 @@ class UserPhotoState extends State<UserPhoto>
   }
 
   Widget buildImage(int index) {
-    return GestureDetector(
-      onTap: () {
-        widget.userBloc.goToFullScreen(index, widget.type);
-      },
-      child: Container(
-        color: const Color(0xFFD2D2D2),
-        height:
-            widget.userBloc.caclulateImageHeight(context, index, widget.type),
-        child: CachedNetworkImage(
-          imageUrl: widget.userBloc.regularUserFeedPhoto(index, widget.type),
-          placeholder: (context, url) => Center(
-            child: CircularProgressIndicator(),
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          widget.userBloc.goToFullScreen(index, widget.type);
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(7),
+          child: Container(
+            color: const Color(0xFFD2D2D2),
+            height: widget.userBloc.caclulateImageHeight(context, index, widget.type),
+            child: CachedNetworkImage(
+              imageUrl: widget.userBloc.regularUserFeedPhoto(index, widget.type),
+              placeholder: (context, url) => Center(
+                child: CircularProgressIndicator(),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              fit: BoxFit.cover,
+            ),
           ),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          fit: BoxFit.cover,
         ),
       ),
     );

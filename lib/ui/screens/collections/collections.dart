@@ -17,61 +17,66 @@ class CollectionsView extends StatefulWidget {
 }
 
 class CollectionsViewState extends State<CollectionsView> {
-  CollectionBloc userBloc;
+  CollectionBloc collectionBloc;
 
   @override
   void initState() {
     super.initState();
-    userBloc = CollectionBloc();
+    collectionBloc = CollectionBloc();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 1000,
-        child: PagewiseGridView.count(
-          crossAxisCount: 3,
-          mainAxisSpacing: 4,
-          crossAxisSpacing: 4,
-          childAspectRatio: 1,
-          pageSize: 12,
-          showRetry: false,
-          pageFuture: (int pageIndex) async {
-            return await userBloc.getCollectionPhotosById(widget.collection.id.toString(), pageIndex + 1);
-          },
-          itemBuilder: (BuildContext context, FeedNetworkModel data, int index) {
-            return buildImage(data);
-          },
-          errorBuilder: (BuildContext context, Object error) {
-            return Container(); // TODO: Add some error widget
-          },
-          loadingBuilder: (BuildContext context) {
-            return CircularProgressIndicator();
-          },
-          noItemsFoundBuilder: (BuildContext context) {
-            return Center(
-              child: Text('Нет элементов :('),
-            );
-          },
-        ),
-    
+      height: 1000,
+      child: PagewiseGridView.count(
+        crossAxisCount: 3,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 1,
+        pageSize: 12,
+        showRetry: false,
+        pageFuture: (int pageIndex) async {
+          return await collectionBloc.getCollectionPhotosById(widget.collection.id.toString(), pageIndex + 1);
+        },
+        itemBuilder: (BuildContext context, FeedNetworkModel _, int index) {
+          return buildImage(index);
+        },
+        errorBuilder: (BuildContext context, Object error) {
+          return Container(); // TODO: Add some error widget
+        },
+        loadingBuilder: (BuildContext context) {
+          return CircularProgressIndicator();
+        },
+        noItemsFoundBuilder: (BuildContext context) {
+          return Center(
+            child: Text('Нет элементов :('),
+          );
+        },
+      ),
     );
   }
 
-  Widget buildImage(FeedNetworkModel entry) {
-    final image = Container(
-      color: Color(0xFFD2D2D2),
-      height: entry.height * MediaQuery.of(context).size.width / entry.width,
-      child: CachedNetworkImage(
-        imageUrl: entry.urls.regular,
-        placeholder: (context, url) => Center(
-          child: CircularProgressIndicator(),
+  Widget buildImage(int index) {
+    return GestureDetector(
+      onTap: () {
+        collectionBloc.goToFullScreen(index);
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(7),
+        child: Container(
+          color: Color(0xFFD2D2D2),
+          height: collectionBloc.calculateHeight(context, index),
+          child: CachedNetworkImage(
+            imageUrl: collectionBloc.regularUserFeedPhoto(index),
+            placeholder: (context, url) => Center(
+              child: CircularProgressIndicator(),
+            ),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            fit: BoxFit.cover,
+          ),
         ),
-        errorWidget: (context, url, error) => Icon(Icons.error),
-        fit: BoxFit.fill,
       ),
     );
-
-    return image;
   }
 }

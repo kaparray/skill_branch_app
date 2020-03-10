@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/widgets.dart';
 import 'package:skill_branch_flutter/base/base_bloc.dart';
 import 'package:skill_branch_flutter/network/api/apis.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
+import 'package:skill_branch_flutter/redux/navigation/navigation_actions.dart';
+import 'package:skill_branch_flutter/redux/navigation/routes.dart';
+import 'package:skill_branch_flutter/redux/store.dart';
 
 class CollectionBloc extends BaseBloc {
-  final _collectionPhotoController =  StreamController<StreamData<List<FeedNetworkModel>>>();
+  final _collectionPhotoController = StreamController<StreamData<List<FeedNetworkModel>>>();
   Stream<StreamData<List<FeedNetworkModel>>> get collectionPhotoControllerStream => _collectionPhotoController.stream;
 
   List<FeedNetworkModel> cacheCollectionPhoto = [];
@@ -31,9 +35,8 @@ class CollectionBloc extends BaseBloc {
       _collectionPhotoController.add(StreamData(error: StreamError.connectionError));
       return [];
     } else {
-      
       List<FeedNetworkModel> userFeed = await _api.requestCollectionsPhotos(id, index);
-                  print('data = ${userFeed[index].urls.full}');
+      print('data = ${userFeed[index].urls.full}');
 
       cacheCollectionPhoto.addAll(userFeed);
       _collectionPhotoController.add(StreamData(data: cacheCollectionPhoto));
@@ -42,5 +45,18 @@ class CollectionBloc extends BaseBloc {
     }
   }
 
+  void goToFullScreen(int index) {
+    store.dispatch(RouteTo(
+      Routes.fullScreen,
+      payload: {'photo': cacheCollectionPhoto[index], 'heroTag': 'cacheCollectionPhoto$index'},
+    ));
+  }
 
+  double calculateHeight(BuildContext context, int index) {
+    return cacheCollectionPhoto[index].height * MediaQuery.of(context).size.width / cacheCollectionPhoto[index].width;
+  }
+
+  String regularUserFeedPhoto(int index) {
+    return cacheCollectionPhoto[index].urls?.regular ?? '';
+  }
 }

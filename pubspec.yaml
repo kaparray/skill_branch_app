@@ -37,3 +37,7 @@ flutter:
 
   assets:
       - assets/icons/like.png
+      - assets/icons/maps-and-flags.png
+      - assets/icons/group.png
+      - assets/icons/bookmark.png
+      - assets/icons/home.png

@@ -22,8 +22,6 @@ class UserCollections extends StatefulWidget {
 }
 
 class UserCollectionsState extends State<UserCollections> with AutomaticKeepAliveClientMixin<UserCollections> {
-  
-  
   @override
   bool get wantKeepAlive => true;
 
@@ -32,9 +30,10 @@ class UserCollectionsState extends State<UserCollections> with AutomaticKeepAliv
     super.build(context);
 
     return PagewiseGridView.count(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 21),
       crossAxisCount: 2,
-      mainAxisSpacing: 4,
-      crossAxisSpacing: 4,
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
       childAspectRatio: 1,
       pageSize: kPerPageUserPhotos,
       pageFuture: (int pageIndex) async {
@@ -62,18 +61,21 @@ class UserCollectionsState extends State<UserCollections> with AutomaticKeepAliv
       onTap: () {
         widget.userBloc.goToCollections(index);
       },
-      child: Row(
-        children: <Widget>[
-          _buildImage(0),
-          const SizedBox(width: 2),
-          Column(
-            children: <Widget>[
-              _buildImage(1),
-              const SizedBox(height: 2),
-              _buildImage(2),
-            ],
-          ),
-        ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(7),
+        child: Row(
+          children: <Widget>[
+            _buildImage(0),
+            const SizedBox(width: 2),
+            Column(
+              children: <Widget>[
+                _buildImage(1),
+                const SizedBox(height: 2),
+                _buildImage(2),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

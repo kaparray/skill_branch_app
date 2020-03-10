@@ -19,7 +19,6 @@ class UserBloc extends BaseBloc {
 
   final _api = UserApi();
 
-
   final StreamController<StreamData<UserNetworkModel>> _userInfoController = StreamController();
   Stream<StreamData<UserNetworkModel>> get userInfoStream => _userInfoController.stream;
 
@@ -27,9 +26,6 @@ class UserBloc extends BaseBloc {
   List<FeedNetworkModel> cacheUserFeed = [];
   List<FeedNetworkModel> cacheLikeUserFeed = [];
   List<Collections> cacheCollectionsUserFeed = [];
-
-
-  
 
   @override
   void init() {
@@ -40,7 +36,6 @@ class UserBloc extends BaseBloc {
   dispose() {
     _userInfoController.close();
   }
-
 
   void pop() {
     store.dispatch(RouteTo(Routes.pop));
@@ -67,11 +62,10 @@ class UserBloc extends BaseBloc {
   }
 
   Future<List<FeedNetworkModel>> getUserPhotos(int index) async {
-  
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) 
-         return [];
+    if (connectivityResult == ConnectivityResult.none)
+      return [];
     else {
       List<FeedNetworkModel> userFeed = await _api.requestUserPhotos(username, index);
       cacheUserFeed.addAll(userFeed);
@@ -80,12 +74,11 @@ class UserBloc extends BaseBloc {
     }
   }
 
-
-   Future<List<FeedNetworkModel>> getLikeUserPhotos(int index) async {
+  Future<List<FeedNetworkModel>> getLikeUserPhotos(int index) async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) 
-         return [];
+    if (connectivityResult == ConnectivityResult.none)
+      return [];
     else {
       List<FeedNetworkModel> userFeed = await _api.requestLikeUserPhotos(username, index);
       cacheLikeUserFeed.addAll(userFeed);
@@ -94,28 +87,26 @@ class UserBloc extends BaseBloc {
     }
   }
 
-   Future<List<Collections>> getCollectionsUserPhotos(int index) async {
+  Future<List<Collections>> getCollectionsUserPhotos(int index) async {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult == ConnectivityResult.none)
-         return [];
+      return [];
     else {
       List<Collections> userFeed = await _api.requestCollectionsUserPhotos(username, index);
       cacheCollectionsUserFeed.addAll(userFeed);
-     
+
       return userFeed;
     }
   }
 
-
-   Future<void> launchUrl() async {
+  Future<void> launchUrl() async {
     if (await canLaunch(_cacheUserInfo?.portfolioUrl)) {
       await launch(_cacheUserInfo?.portfolioUrl);
     } else {
       throw 'Could not launch ${_cacheUserInfo?.portfolioUrl}';
     }
   }
-
 
   double horizontalInsets(BuildContext context) {
     return MediaQuery.of(context).size.width / 3 - 24;
@@ -125,30 +116,31 @@ class UserBloc extends BaseBloc {
     store.dispatch(RouteTo(Routes.collections, payload: cacheCollectionsUserFeed[index]));
   }
 
- 
+  String get portfolioUrl {
+    if (_cacheUserInfo?.portfolioUrl != null) {
+      return _cacheUserInfo?.portfolioUrl?.replaceFirst('https://', '')?.replaceFirst('http://', '');
+    }
+  }
 
-  String get portfolioUrl => "${_cacheUserInfo?.portfolioUrl}"
-      .replaceFirst('https://', '')
-      .replaceFirst('http://', '');
   String get profileBio => _cacheUserInfo?.bio ?? '';
-  String get followersCount => '${_cacheUserInfo?.followersCount} followers';
-  String get followingCount => '${_cacheUserInfo?.followingCount} following';
+  String get followersCount => '${_cacheUserInfo?.followersCount ?? ''}';
+  String get followingCount => '${_cacheUserInfo?.followingCount ?? ''}';
   String get name => _cacheUserInfo?.name ?? '';
   String get username => _cacheUserInfo?.username ?? '';
   String get largeProfileImage => _cacheUserInfo?.profileImage?.large?.replaceAll('128', '288') ?? '';
   String get location => _cacheUserInfo?.location ?? '';
 
-
-
   String regularUserFeedPhoto(int index, UserPhotoType type) {
-    switch(type) {
+    switch (type) {
       case UserPhotoType.userPhotos:
         return cacheUserFeed[index].urls?.regular ?? '';
       case UserPhotoType.userPhotos:
         return cacheLikeUserFeed[index].urls?.regular ?? '';
       case UserPhotoType.userCollections:
         if (cacheCollectionsUserFeed.length > index) {
-          return (cacheCollectionsUserFeed[index]?.previewPhotos?.length ?? -1) >= 3 ? (cacheCollectionsUserFeed[index]?.previewPhotos[2]?.urls?.regular ?? '') : '';
+          return (cacheCollectionsUserFeed[index]?.previewPhotos?.length ?? -1) >= 3
+              ? (cacheCollectionsUserFeed[index]?.previewPhotos[2]?.urls?.regular ?? '')
+              : '';
         }
         return '';
       default:
@@ -157,14 +149,20 @@ class UserBloc extends BaseBloc {
   }
 
   double caclulateImageHeight(BuildContext context, int index, UserPhotoType type) {
-    switch(type) {
+    switch (type) {
       case UserPhotoType.userPhotos:
-        return (cacheUserFeed[index]?.height ?? 1.0) * MediaQuery.of(context).size.width / (cacheUserFeed[index]?.width ?? 1.0);
+        return (cacheUserFeed[index]?.height ?? 1.0) *
+            MediaQuery.of(context).size.width /
+            (cacheUserFeed[index]?.width ?? 1.0);
       case UserPhotoType.userPhotos:
-        return (cacheLikeUserFeed[index]?.height ?? 1.0) * MediaQuery.of(context).size.width / (cacheUserFeed[index]?.width ?? 1.0);
+        return (cacheLikeUserFeed[index]?.height ?? 1.0) *
+            MediaQuery.of(context).size.width /
+            (cacheUserFeed[index]?.width ?? 1.0);
       case UserPhotoType.userCollections:
         if (cacheCollectionsUserFeed.length > index) {
-          return (cacheCollectionsUserFeed[index].coverPhoto?.height ?? 1.0) * MediaQuery.of(context).size.width / (cacheCollectionsUserFeed[index].coverPhoto?.width ?? 1.0);
+          return (cacheCollectionsUserFeed[index].coverPhoto?.height ?? 1.0) *
+              MediaQuery.of(context).size.width /
+              (cacheCollectionsUserFeed[index].coverPhoto?.width ?? 1.0);
         }
 
         return 0;
@@ -173,34 +171,24 @@ class UserBloc extends BaseBloc {
     }
   }
 
-
- void goToFullScreen(int index, UserPhotoType type) {
+  void goToFullScreen(int index, UserPhotoType type) {
     switch (type) {
       case UserPhotoType.userPhotos:
         store.dispatch(RouteTo(
           Routes.fullScreen,
-          payload: {
-            'photo': cacheUserFeed[index],
-            'heroTag': 'cacheUserFeed$index'
-          },
+          payload: {'photo': cacheUserFeed[index], 'heroTag': 'cacheUserFeed$index'},
         ));
         break;
       case UserPhotoType.userPhotos:
         store.dispatch(RouteTo(
           Routes.fullScreen,
-          payload: {
-            'photo': cacheLikeUserFeed[index],
-            'heroTag': 'cacheLikeUserFeed$index'
-          },
+          payload: {'photo': cacheLikeUserFeed[index], 'heroTag': 'cacheLikeUserFeed$index'},
         ));
         break;
       case UserPhotoType.userCollections:
         store.dispatch(RouteTo(
           Routes.fullScreen,
-          payload: {
-            'photo': cacheCollectionsUserFeed[index],
-            'heroTag': 'cacheCollectionsUserFeed$index'
-          },
+          payload: {'photo': cacheCollectionsUserFeed[index], 'heroTag': 'cacheCollectionsUserFeed$index'},
         ));
         break;
       default:
