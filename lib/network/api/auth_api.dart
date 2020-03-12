@@ -12,19 +12,19 @@ import 'package:skill_branch_flutter/redux/user/user_actions.dart';
 class AuthApi extends BaseApi {
   Future<UserNetworkModel> auth(String code) async {
     try {
-
       Container container = Container();
 
-
       Map<String, dynamic> queryParametrs = {
-        'code': code,
-        'grant_type': 'authorization_code',
         'client_id': container<BaseConfig>().baseAccessKey,
         'client_secret': container<BaseConfig>().baseSecretKey,
-        'redirect_uri': 'photoapp%3A%2F%2Fcallback',
+        'redirect_uri': Uri.parse('photoapp://callback').toString(),
+        'code': code,
+        'grant_type': 'authorization_code',
       };
 
       final url = '/oauth/token?${mapToQueryParametrs(queryParametrs)}';
+
+      print('https://unsplash.com$url');
 
       final response = await makeRequest(url, type: RequestType.post, overrideUrl: 'https://unsplash.com');
       String userAccessToken = json.decode(response.body)['access_token'];

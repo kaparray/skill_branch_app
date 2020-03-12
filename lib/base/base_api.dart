@@ -149,41 +149,41 @@ abstract class BaseApi {
   Future<Response> makeRequest(String url, {RequestType type = RequestType.get,
       Duration duration = const Duration(seconds: 10), String overrideUrl}) async {
     Response response;
-    var container = Container()<BaseConfig>();
+    var baseUrl = overrideUrl ?? Container()<BaseConfig>().baseUrl;
 
     switch (type) {
       case RequestType.get:
         response = await http
-            .get(container.baseUrl + url, headers: baseHeaders)
+            .get(baseUrl + url, headers: baseHeaders)
             .timeout(duration, onTimeout: () {
           throw StreamError.timeoutError;
         });
         break;
       case RequestType.put:
         response = await http
-            .put(container.baseUrl + url, headers: baseHeaders)
+            .put(baseUrl + url, headers: baseHeaders)
             .timeout(duration, onTimeout: () {
           throw StreamError.timeoutError;
         });
         break;
       case RequestType.post:
-      print(container.baseUrl + url);
+      print(baseUrl + url);
         response = await http
-            .post(container.baseUrl + url, headers: baseHeaders)
+            .post(baseUrl + url, headers: baseHeaders)
             .timeout(duration, onTimeout: () {
           throw StreamError.timeoutError;
         });
         break;
       case RequestType.delete:
         response = await http
-            .delete(container.baseUrl + url, headers: baseHeaders)
+            .delete(baseUrl + url, headers: baseHeaders)
             .timeout(duration, onTimeout: () {
           throw StreamError.timeoutError;
         });
         break;
       case RequestType.patch:
         response = await http
-            .patch(container.baseUrl + url, headers: baseHeaders)
+            .patch(baseUrl + url, headers: baseHeaders)
             .timeout(duration, onTimeout: () {
           throw StreamError.timeoutError;
         });
@@ -206,6 +206,7 @@ abstract class BaseApi {
     else
       headers.addAll({"Authorization": "Client-ID ${container.baseAccessKey}"});
 
+    print('headers = $headers');
     return headers;
   }
     AppState get state => store.state;

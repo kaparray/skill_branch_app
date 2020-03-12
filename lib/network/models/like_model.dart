@@ -1,22 +1,23 @@
-import 'collection_links.dart';
+import 'package:skill_branch_flutter/network/models/user_model.dart';
+
 import 'feed_network_model.dart';
 
 class Like {
   FeedNetworkModel photo;
-  CollectionLinks links;
+  User user;
 
   Like({
     this.photo,
-    this.links,
+    this.user,
   });
 
   factory Like.fromJson(Map<String, dynamic> json) => Like(
-        photo: json["photo"],
-        links: json["links"],
+        photo: FeedNetworkModel.fromJson(json["photo"]),
+        user: User.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "links": links,
-        "photo": photo,
+        "user": user,
+        "user": photo,
       };
 }

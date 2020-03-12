@@ -37,41 +37,38 @@ class FeedBloc extends BaseBloc {
     }
   }
 
-  Future<bool> likePhoto(String id, bool isLiked) async {
+  Future<bool> likePhoto(int index) async {
+    final id = allPhotos[index].id;
+    var likedByUser = this.likedByUser(index);
+
     if (state.userState.isAuth) {
       var connectivityResult = await Connectivity().checkConnectivity();
 
       if (connectivityResult == ConnectivityResult.none) {
         throw StreamError.connectionError;
       } else {
-        isLiked = await _api.likeUnlikePhoto(id, isLiked);
-        allPhotos.where((photo) => photo.id == id).toList()[0].likedByUser =
-            isLiked;
+        likedByUser = await _api.likeUnlikePhoto(id, likedByUser);
+        allPhotos.where((photo) => photo.id == id).toList()[0].likedByUser = likedByUser;
 
-        return isLiked;
+        return likedByUser;
       }
     } else {
       dispatch(AuthUserAction());
     }
 
-    return isLiked;
+    return likedByUser;
   }
-
 
   void goToUserScreen(int index) {
     store.dispatch(RouteTo(Routes.profile, payload: userInfo(index)));
   }
-
 
   void pop() {
     store.dispatch(RouteTo(Routes.pop));
   }
 
   void goToFullScreen(int index) {
-    store.dispatch(RouteTo(Routes.fullScreen, payload: {
-          'photo': allPhotos[index],
-          'heroTag': 'feed$index'
-        }));      
+    store.dispatch(RouteTo(Routes.fullScreen, payload: {'photo': allPhotos[index], 'heroTag': 'feed$index'}));
   }
 
   void launchUrl(String url) async {
@@ -81,7 +78,6 @@ class FeedBloc extends BaseBloc {
       throw 'Could not launch $url';
     }
   }
-
 
   void downloadPhoto(String downloadLink) {
     ImageDownloader.downloadImage(downloadLink).then((_) async {
@@ -93,18 +89,15 @@ class FeedBloc extends BaseBloc {
   }
 
   double calculatePhotoHeight(BuildContext context, int index) {
-    return allPhotos[index].height *
-        MediaQuery.of(context).size.width /
-        allPhotos[index].width;
+    return allPhotos[index].height * MediaQuery.of(context).size.width / allPhotos[index].width;
   }
-
 
   UserNetworkModel userInfo(int index) => allPhotos[index].user;
   String regularPhoto(int index) => allPhotos[index].urls.regular;
   String profileImageLarge(int index) => allPhotos[index].user.profileImage.large;
   String username(int index) => allPhotos[index].user.username;
   String altDescription(int index) => allPhotos[index]?.altDescription;
-  bool likedByUser(int index) => allPhotos[index]?.likedByUser;
+  bool likedByUser(int index) => allPhotos[index]?.likedByUser ?? false;
   String photoId(int index) => allPhotos[index]?.id;
   int likes(int index) => allPhotos[index]?.likes;
 
@@ -116,7 +109,7 @@ class FeedBloc extends BaseBloc {
   }
 
   String get regularPhotoFull => _feedNetworkModel?.urls?.regular ?? '';
-  String get profileImageLargeFull => _feedNetworkModel?.user?.profileImage?.large  ?? '';
+  String get profileImageLargeFull => _feedNetworkModel?.user?.profileImage?.large ?? '';
   String get usernameFull => "@${_feedNetworkModel?.user?.username}" ?? 'No username :(';
   String get nameFull => _feedNetworkModel?.user?.name ?? 'No name :(';
   String get altDescriptionFull => _feedNetworkModel?.altDescription ?? '';
@@ -129,8 +122,6 @@ class FeedBloc extends BaseBloc {
   void goToUserScreenFull() {
     store.dispatch(RouteTo(Routes.profile, payload: _feedNetworkModel.user));
   }
-
-
 
   @override
   void dispose() {}

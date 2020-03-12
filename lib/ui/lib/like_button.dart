@@ -17,11 +17,13 @@ class LikeButton extends StatefulWidget {
 
 class LikeButtonState extends State<LikeButton> {
   bool isLike;
+  int likeCounter;
 
   @override
   void initState() {
     super.initState();
     isLike = widget.isLike;
+    likeCounter = widget.likeCounter;
   }
 
   @override
@@ -30,6 +32,7 @@ class LikeButtonState extends State<LikeButton> {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         isLike = await widget.onChange();
+        isLike ? likeCounter++ : likeCounter--;
         setState(() {});
       },
       child: Center(
@@ -42,10 +45,11 @@ class LikeButtonState extends State<LikeButton> {
                 'assets/icons/like.png',
                 width: 21,
                 height: 18.3,
+                color: isLike ? Colors.red : Colors.black,
               ),
               SizedBox(width: 4.21),
               Text(
-                widget.likeCounter.toString(),
+                likeCounter.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF000000),

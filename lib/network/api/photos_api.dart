@@ -9,8 +9,7 @@ import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 
 class PhotosApi extends BaseApi {
-  Future<List<FeedNetworkModel>> requestPhotos(
-      {int page = 1, OrderBy sortType = OrderBy.latest}) async {
+  Future<List<FeedNetworkModel>> requestPhotos({int page = 1, OrderBy sortType = OrderBy.latest}) async {
     try {
       String url = "/photos?${feedQueryParametrs(page)}";
 
@@ -35,7 +34,7 @@ class PhotosApi extends BaseApi {
       if (isLike) {
         response = await makeRequest(url, type: RequestType.delete);
       } else {
-        response = await makeRequest(url);
+        response = await makeRequest(url, type: RequestType.post);
       }
       print("response  ${response.body}");
       Map<String, dynamic> responseParse = json.decode(response.body);
@@ -44,7 +43,9 @@ class PhotosApi extends BaseApi {
         throw StreamError.accessTokenInvalid;
       }
 
-      return response.statusCode == 200;
+      final photo = Like.fromJson(json.decode(response.body));
+      print('photo = ${response.body}');
+      return photo.photo.likedByUser;
     } catch (ex, trace) {
       debugPrint("${DateTime.now()} ex: $ex");
       debugPrint("${DateTime.now()} trace: $trace");

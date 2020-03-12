@@ -38,6 +38,7 @@ class UserMiddleware extends MiddlewareClass<AppState> {
     final url ='$baseAuthUrl?client_id=${container<BaseConfig>().baseAccessKey}&redirect_uri=$redirectUrl&response_type=code&scope=$scope';
     final result = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: callbackUrlScheme);
     
+    print('$url');
     
     String code = Uri.parse(result).queryParameters['code'];
     UserNetworkModel myAccountData;
