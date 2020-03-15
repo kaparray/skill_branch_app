@@ -41,3 +41,6 @@ flutter:
       - assets/icons/group.png
       - assets/icons/bookmark.png
       - assets/icons/home.png
+      - assets/icons/feed.png
+      - assets/icons/search.png
+      - assets/icons/user.png

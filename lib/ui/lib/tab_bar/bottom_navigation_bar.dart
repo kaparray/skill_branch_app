@@ -4,21 +4,9 @@ import 'package:redux/redux.dart';
 import 'package:skill_branch_flutter/redux/app/app_state.dart';
 
 class BottomNavyBar extends StatelessWidget {
-  final double iconSize;
-  final Color backgroundColor;
-  final bool showElevation;
-  final Duration animationDuration;
-  final List<BottomNavyBarItem> items;
-  final ValueChanged<int> onItemSelected;
-  final MainAxisAlignment mainAxisAlignment;
-  final double itemCornerRadius;
-  final double containerHeight;
-  final Curve curve;
-
   BottomNavyBar({
     Key key,
     this.showElevation = true,
-    this.iconSize = 26,
     this.backgroundColor,
     this.itemCornerRadius = 50,
     this.containerHeight = 56,
@@ -34,11 +22,19 @@ class BottomNavyBar extends StatelessWidget {
     assert(curve != null);
   }
 
+  final Color backgroundColor;
+  final bool showElevation;
+  final Duration animationDuration;
+  final List<BottomNavyBarItem> items;
+  final ValueChanged<int> onItemSelected;
+  final MainAxisAlignment mainAxisAlignment;
+  final double itemCornerRadius;
+  final double containerHeight;
+  final Curve curve;
+
   @override
   Widget build(BuildContext context) {
-    final bgColor = (backgroundColor == null)
-        ? Theme.of(context).bottomAppBarColor
-        : backgroundColor;
+    final bgColor = (backgroundColor == null) ? Theme.of(context).bottomAppBarColor : backgroundColor;
 
     return Container(
       decoration: BoxDecoration(
@@ -69,7 +65,6 @@ class BottomNavyBar extends StatelessWidget {
                     if (index == activeTab.state.tabState.currentTab) {
                       return _ItemWidget(
                         item: item,
-                        iconSize: iconSize,
                         isSelected: true,
                         backgroundColor: bgColor,
                         itemCornerRadius: itemCornerRadius,
@@ -79,7 +74,6 @@ class BottomNavyBar extends StatelessWidget {
                     }
                     return _ItemWidget(
                       item: item,
-                      iconSize: iconSize,
                       isSelected: false,
                       backgroundColor: bgColor,
                       itemCornerRadius: itemCornerRadius,
@@ -98,14 +92,6 @@ class BottomNavyBar extends StatelessWidget {
 }
 
 class _ItemWidget extends StatelessWidget {
-  final double iconSize;
-  final bool isSelected;
-  final BottomNavyBarItem item;
-  final Color backgroundColor;
-  final double itemCornerRadius;
-  final Duration animationDuration;
-  final Curve curve;
-
   const _ItemWidget({
     Key key,
     @required this.item,
@@ -113,23 +99,26 @@ class _ItemWidget extends StatelessWidget {
     @required this.backgroundColor,
     @required this.animationDuration,
     @required this.itemCornerRadius,
-    @required this.iconSize,
     this.curve = Curves.linear,
   })  : assert(isSelected != null),
         assert(item != null),
         assert(backgroundColor != null),
         assert(animationDuration != null),
         assert(itemCornerRadius != null),
-        assert(iconSize != null),
         assert(curve != null),
         super(key: key);
+
+  final bool isSelected;
+  final BottomNavyBarItem item;
+  final Color backgroundColor;
+  final double itemCornerRadius;
+  final Duration animationDuration;
+  final Curve curve;
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      width: isSelected
-          ? 150
-          : (MediaQuery.of(context).size.width - 150 - 8 * 4 - 4 * 2) / 2,
+      width: isSelected ? 150 : (MediaQuery.of(context).size.width - 150 - 8 * 4 - 4 * 2) / 2,
       height: double.maxFinite,
       duration: animationDuration,
       curve: curve,
@@ -141,41 +130,31 @@ class _ItemWidget extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         physics: NeverScrollableScrollPhysics(),
         child: Container(
-          width: isSelected
-              ? 150
-              : (MediaQuery.of(context).size.width - 150 - 8 * 4 - 4 * 2) / 2,
+          width: isSelected ? 150 : (MediaQuery.of(context).size.width - 150 - 8 * 4 - 4 * 2) / 2,
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              IconTheme(
-                data: IconThemeData(
-                  size: iconSize,
-                  color: isSelected
-                      ? item.activeColor.withOpacity(1)
-                      : item.inactiveColor == null
-                          ? item.activeColor
-                          : item.inactiveColor,
-                ),
-                child: item.icon,
+              Image.asset(
+                item.asset,
+                color: isSelected ? item.activeColor : item.inactiveColor,
               ),
-              if (isSelected)
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4),
-                    child: DefaultTextStyle.merge(
-                      style: TextStyle(
-                        color: item.activeColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      textAlign: item.textAlign,
-                      child: item.title,
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: DefaultTextStyle.merge(
+                    style: TextStyle(
+                      color: isSelected ? item.activeColor : item.inactiveColor,
+                      fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 1,
+                    textAlign: item.textAlign,
+                    child: item.title,
                   ),
                 ),
+              ),
             ],
           ),
         ),
@@ -185,20 +164,20 @@ class _ItemWidget extends StatelessWidget {
 }
 
 class BottomNavyBarItem {
-  final Icon icon;
-  final Text title;
-  final Color activeColor;
-  final Color inactiveColor;
-  final TextAlign textAlign;
-
   BottomNavyBarItem({
-    @required this.icon,
+    @required this.asset,
     @required this.title,
     this.activeColor = Colors.blue,
     this.textAlign,
     this.inactiveColor,
   }) {
-    assert(icon != null);
+    assert(asset != null && asset.isNotEmpty);
     assert(title != null);
   }
+
+  final String asset;
+  final Text title;
+  final Color activeColor;
+  final Color inactiveColor;
+  final TextAlign textAlign;
 }

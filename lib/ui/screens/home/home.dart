@@ -15,7 +15,6 @@ import 'package:skill_branch_flutter/ui/screens/feed/feed.dart';
 import 'package:skill_branch_flutter/ui/screens/search/search.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
 
-
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomeState();
@@ -32,17 +31,30 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   ];
 
   final List<BottomNavyBarItem> _tabs = [
-    BottomNavyBarItem(icon: Icon(CupertinoIcons.home), title: Text('Feed')),
-    BottomNavyBarItem(icon: Icon(CupertinoIcons.search), title: Text('Search')),
-    BottomNavyBarItem(icon: Icon(CupertinoIcons.profile_circled), title: Text('User')),
+    BottomNavyBarItem(
+      asset: 'assets/icons/feed.png',
+      title: Text('Feed'),
+      activeColor: Color(0xFF16B9FD),
+      inactiveColor: Color(0xFF919BA8),
+    ),
+    BottomNavyBarItem(
+      asset: 'assets/icons/search.png',
+      title: Text('Search'),
+      activeColor: Color(0xFF16B9FD),
+      inactiveColor: Color(0xFF919BA8),
+    ),
+    BottomNavyBarItem(
+      asset: 'assets/icons/user.png',
+      title: Text('User'),
+      activeColor: Color(0xFF16B9FD),
+      inactiveColor: Color(0xFF919BA8),
+    ),
   ];
 
   @override
   void initState() {
     super.initState();
-    connectivitySub = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
+    connectivitySub = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       store.dispatch(ConnectivityAction(result));
     });
   }
@@ -91,8 +103,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
     return StoreBuilder(
       builder: (BuildContext context, Store<AppState> vm) {
-        if (store.state.connectivityState.connectivityResult ==
-            ConnectivityResult.none) {
+        if (store.state.connectivityState.connectivityResult == ConnectivityResult.none) {
           height = 100;
         } else {
           height = 0;
