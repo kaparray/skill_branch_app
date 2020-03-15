@@ -36,6 +36,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    # icons
       - assets/icons/like.png
       - assets/icons/maps-and-flags.png
       - assets/icons/group.png
@@ -44,3 +45,7 @@ flutter:
       - assets/icons/feed.png
       - assets/icons/search.png
       - assets/icons/user.png
+      - assets/icons/warning.png
+
+    # icons
+      - assets/image/connection.png

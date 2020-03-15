@@ -10,6 +10,7 @@ import 'package:skill_branch_flutter/redux/bottom_navigation_bar/tab_bar_action.
 import 'package:skill_branch_flutter/redux/connectivity/connectivity_actions.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
 import 'package:skill_branch_flutter/redux/user/user_actions.dart';
+import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/ui/lib/tab_bar/bottom_navigation_bar.dart';
 import 'package:skill_branch_flutter/ui/screens/feed/feed.dart';
 import 'package:skill_branch_flutter/ui/screens/search/search.dart';
@@ -34,20 +35,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     BottomNavyBarItem(
       asset: 'assets/icons/feed.png',
       title: Text('Feed'),
-      activeColor: Color(0xFF16B9FD),
-      inactiveColor: Color(0xFF919BA8),
+      activeColor: AppColors.dodgerBlue,
+      inactiveColor: AppColors.manatee,
     ),
     BottomNavyBarItem(
       asset: 'assets/icons/search.png',
       title: Text('Search'),
-      activeColor: Color(0xFF16B9FD),
-      inactiveColor: Color(0xFF919BA8),
+      activeColor: AppColors.dodgerBlue,
+      inactiveColor: AppColors.manatee,
     ),
     BottomNavyBarItem(
       asset: 'assets/icons/user.png',
       title: Text('User'),
-      activeColor: Color(0xFF16B9FD),
-      inactiveColor: Color(0xFF919BA8),
+      activeColor: AppColors.dodgerBlue,
+      inactiveColor: AppColors.manatee,
     ),
   ];
 
@@ -90,7 +91,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 bucket: bucket,
               ),
             ),
-            Positioned(left: 0, right: 0, top: 0, child: buildNoConnection()),
+            Positioned(left: 0, right: 0, top: 0, bottom: 0, child: buildNoConnection()),
           ],
         ),
       ),
@@ -104,21 +105,42 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return StoreBuilder(
       builder: (BuildContext context, Store<AppState> vm) {
         if (store.state.connectivityState.connectivityResult == ConnectivityResult.none) {
-          height = 100;
+          height = 142;
         } else {
           height = 0;
         }
         return AnimatedSize(
           duration: Duration(seconds: 1),
           vsync: this,
-          child: Container(
-            height: height,
-            color: Colors.blue.withOpacity(0.5),
-            child: Container(
-              child: Center(
-                child: Text(
-                  'Нет интернет соединения',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: EdgeInsets.all(16),
+                height: height,
+                color: AppColors.alto.withOpacity(0.9),
+                child: Column(
+                  children: <Widget>[
+                    Image.asset(
+                      'assets/image/connection.png',
+                      width: 60,
+                      height: 60,
+                    ),
+                    const SizedBox(height: 22),
+                    Text(
+                      'There was an error loading the feed',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.manatee,
+                        fontFamily: 'Roboto',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                        height: 22 / 17,
+                        letterSpacing: -0.41,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

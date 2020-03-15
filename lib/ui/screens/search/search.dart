@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/search_bloc.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
+import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/static.dart';
 
 class SearchView extends StatefulWidget {
@@ -94,11 +95,9 @@ class SearchViewState extends State<SearchView> {
   }
 
   Widget buildImage(FeedNetworkModel entry) {
-    final image = Container(
-      color: Color(0xFFD2D2D2),
-      height: (entry?.height ?? 1.0) *
-          MediaQuery.of(context).size.width /
-          (entry?.width ?? 1.0),
+    return Container(
+      color: AppColors.alto,
+      height: (entry?.height ?? 1.0) * MediaQuery.of(context).size.width / (entry?.width ?? 1.0),
       child: CachedNetworkImage(
         imageUrl: entry.urls?.regular ?? '',
         placeholder: (context, url) => Center(
@@ -108,7 +107,5 @@ class SearchViewState extends State<SearchView> {
         fit: BoxFit.cover,
       ),
     );
-
-    return image;
   }
 }

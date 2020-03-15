@@ -97,36 +97,17 @@ class FeedBloc extends BaseBloc {
     return allPhotos[index].height * MediaQuery.of(context).size.width / allPhotos[index].width;
   }
 
+  String photoId(int index) => allPhotos[index]?.id ?? '';
   UserNetworkModel userInfo(int index) => allPhotos[index].user;
-  String regularPhoto(int index) => allPhotos[index].urls.regular;
-  String profileImageLarge(int index) => allPhotos[index].user.profileImage.large;
-  String username(int index) => allPhotos[index].user.username;
-  String altDescription(int index) => allPhotos[index]?.altDescription;
+  String regularPhoto(int index) => allPhotos[index].urls.regular ?? '';
+  String profileImageLarge(int index) => allPhotos[index].user.profileImage.large ?? '';
+  String username(int index) => "@${allPhotos[index].user.username}" ?? 'No username :(';
+  String altDescription(int index) => allPhotos[index]?.altDescription ?? '';
   bool likedByUser(int index) => allPhotos[index]?.likedByUser ?? false;
-  String photoId(int index) => allPhotos[index]?.id;
   int likes(int index) => allPhotos[index]?.likes;
-
-  ////// Full screen
-  FeedNetworkModel _feedNetworkModel;
-
-  void setUserModel(FeedNetworkModel photo) {
-    _feedNetworkModel = photo;
-  }
-
-  String get regularPhotoFull => _feedNetworkModel?.urls?.regular ?? '';
-  String get profileImageLargeFull => _feedNetworkModel?.user?.profileImage?.large ?? '';
-  String get usernameFull => "@${_feedNetworkModel?.user?.username}" ?? 'No username :(';
-  String get nameFull => _feedNetworkModel?.user?.name ?? 'No name :(';
-  String get altDescriptionFull => _feedNetworkModel?.altDescription ?? '';
-  bool get likedByUserFull => _feedNetworkModel?.likedByUser ?? false;
-  String get photoIdFull => _feedNetworkModel?.id ?? '';
-  int get likesFull => _feedNetworkModel?.likes ?? 0;
-  String get downloadFull => _feedNetworkModel?.links?.download ?? '';
-  String get htmlFull => _feedNetworkModel?.links?.html ?? '';
-
-  void goToUserScreenFull() {
-    store.dispatch(RouteTo(Routes.profile, payload: _feedNetworkModel.user));
-  }
+  String name(int index) => allPhotos[index]?.user?.name ?? 'No name :(';
+  String download(int index) => allPhotos[index].links?.download ?? '';
+  String html(int index) => allPhotos[index].links?.html ?? '';
 
   @override
   void dispose() {}

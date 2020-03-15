@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
+import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_collections.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_photo.dart';
 
@@ -79,7 +80,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
         icon: Icon(CupertinoIcons.back, color: Colors.black),
         onPressed: userBloc.pop,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       centerTitle: true,
       title: Text(
         userBloc.username,
@@ -160,7 +161,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                                   fontStyle: FontStyle.normal,
                                   fontWeight: FontWeight.normal,
                                   letterSpacing: -0.08,
-                                  color: Color(0xFF000000),
+                                  color: AppColors.black,
                                 ),
                               ),
                             ],
@@ -203,7 +204,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                 fontSize: 23,
                 height: 23 / 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF16B9FD),
+                color: AppColors.dodgerBlue,
               ),
             ),
             const SizedBox(height: 1),
@@ -211,7 +212,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
               'followers',
               style: const TextStyle(
                   fontSize: 13,
-                  color: Color(0xFF000000),
+                  color: AppColors.black,
                   height: 18 / 13,
                   fontWeight: FontWeight.normal,
                   fontStyle: FontStyle.normal,
@@ -229,7 +230,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                 fontSize: 23,
                 height: 23 / 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF16B9FD),
+                color: AppColors.dodgerBlue,
               ),
             ),
             const SizedBox(height: 1),
@@ -238,7 +239,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
               style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.normal,
-                  color: Color(0xFF000000),
+                  color: AppColors.black,
                   height: 18 / 13,
                   fontStyle: FontStyle.normal,
                   fontFamily: 'Roboto'),
@@ -254,12 +255,12 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
       controller: _tabController,
       indicatorColor: Theme.of(context).primaryColor,
       indicator: UnderlineTabIndicator(
-        borderSide: BorderSide(width: _kBorderSidewidth, color: Colors.blue),
+        borderSide: BorderSide(width: _kBorderSidewidth, color: AppColors.dodgerBlue),
         insets: EdgeInsets.symmetric(
           horizontal: userBloc.horizontalInsets(context),
         ),
       ),
-      labelColor: Colors.blue,
+      labelColor: AppColors.dodgerBlue,
       unselectedLabelColor: Colors.blue[300].withOpacity(0.75),
       tabs: [
         Padding(

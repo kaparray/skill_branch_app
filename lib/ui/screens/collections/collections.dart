@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/collection_bloc.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
+import 'package:skill_branch_flutter/res/colors.dart';
 
 class CollectionsView extends StatefulWidget {
   CollectionsView(this.collection);
@@ -43,7 +44,7 @@ class CollectionsViewState extends State<CollectionsView> {
           return buildImage(index);
         },
         errorBuilder: (BuildContext context, Object error) {
-          return Container(); // TODO: Add some error widget
+          return Container();
         },
         loadingBuilder: (BuildContext context) {
           return CircularProgressIndicator();
@@ -65,7 +66,7 @@ class CollectionsViewState extends State<CollectionsView> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(7),
         child: Container(
-          color: Color(0xFFD2D2D2),
+          color: AppColors.white,
           height: collectionBloc.calculateHeight(context, index),
           child: CachedNetworkImage(
             imageUrl: collectionBloc.regularUserFeedPhoto(index),

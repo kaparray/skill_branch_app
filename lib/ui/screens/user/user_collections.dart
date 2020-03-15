@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
+import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/static.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
 
@@ -84,7 +85,7 @@ class UserCollectionsState extends State<UserCollections> with AutomaticKeepAliv
     return Expanded(
       child: Container(
         width: _kImageWidth,
-        color: Color(0xFFD2D2D2),
+        color: AppColors.alto,
         height: widget.userBloc.caclulateImageHeight(context, index, UserPhotoType.userCollections),
         child: CachedNetworkImage(
           imageUrl: widget.userBloc.regularUserFeedPhoto(index, UserPhotoType.userCollections),

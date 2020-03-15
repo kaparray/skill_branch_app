@@ -5,6 +5,7 @@ import 'package:loadmore/loadmore.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/base/inhereted_widget.dart';
 import 'package:skill_branch_flutter/di/injector.dart';
+import 'package:skill_branch_flutter/res/colors.dart';
 import 'package:skill_branch_flutter/ui/lib/like_button.dart';
 
 import 'package:kiwi/kiwi.dart' as kiwi;
@@ -43,7 +44,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
           return Column(
             children: <Widget>[
               _buildItem(index),
-              Divider(thickness: 2, color: Color(0xFFE7E7E7)),
+              Divider(thickness: 2, color: AppColors.mercury),
             ],
           );
         },
@@ -68,7 +69,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Color(0xFF8E8E93),
+                  color: AppColors.manatee,
                   fontWeight: FontWeight.normal,
                   fontFamily: 'Roboto',
                   fontStyle: FontStyle.normal,
@@ -100,7 +101,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                   Text(
                     feedBloc.username(index),
                     style: TextStyle(
-                      color: Color(0xFF000000),
+                      color: AppColors.black,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Roboto',
                       fontStyle: FontStyle.normal,
@@ -111,7 +112,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                   Text(
                     "@${feedBloc.username(index)}",
                     style: TextStyle(
-                      color: Color(0xFF8E8E93),
+                      color: AppColors.manatee,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
                       fontStyle: FontStyle.normal,
@@ -159,7 +160,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
         child: ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(17)),
           child: Container(
-            color: Color(0xFFD2D2D2),
+            color: AppColors.white,
             height: feedBloc.calculatePhotoHeight(context, index),
             child: CachedNetworkImage(
               imageUrl: feedBloc.regularPhoto(index),

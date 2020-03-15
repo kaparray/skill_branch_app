@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/di/injector.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
-import 'package:skill_branch_flutter/ui/lib/like_button.dart';
+import 'package:skill_branch_flutter/res/res.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 
 import 'package:flutter/cupertino.dart';
+import 'package:skill_branch_flutter/ui/lib/like_button.dart';
 
 const double _kImageSize = 42;
 
 class FullScreenImage extends StatefulWidget {
-  FullScreenImage(this.photo, this.heroTag);
+  FullScreenImage(this.heroTag, this.index);
 
-  final FeedNetworkModel photo;
   final String heroTag;
+  final int index;
 
   @override
   State<StatefulWidget> createState() {
@@ -34,10 +35,8 @@ class FullScreenImageState extends State<FullScreenImage> {
 
   @override
   Widget build(BuildContext context) {
-    feedBloc.setUserModel(widget.photo);
-
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Column(
@@ -45,15 +44,15 @@ class FullScreenImageState extends State<FullScreenImage> {
           children: <Widget>[
             _buildHeroImage(),
             const SizedBox(height: 11),
-            if (feedBloc.altDescriptionFull != null)
+            if (feedBloc.altDescription(widget.index) != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
-                  feedBloc.altDescriptionFull,
+                  feedBloc.altDescription(widget.index),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: Color(0xFF8E8E93),
+                    color: AppColors.manatee,
                     fontWeight: FontWeight.normal,
                     fontFamily: 'Roboto',
                     fontStyle: FontStyle.normal,
@@ -74,13 +73,9 @@ class FullScreenImageState extends State<FullScreenImage> {
   }
 
   Widget _buildLikeButton() {
-    final photoId = feedBloc.photoIdFull;
-    final likedByUser = feedBloc.likedByUserFull;
-
     return LikeButton(
-     // onChange: () async => await feedBloc.likePhoto(photoId, likedByUser),
-      // isLike: feedBloc.likedByUserFull,
-      // likeCounter: feedBloc.likesFull,
+      feedBloc: feedBloc,
+      index: widget.index,
     );
   }
 
@@ -90,11 +85,11 @@ class FullScreenImageState extends State<FullScreenImage> {
       leading: IconButton(
         icon: Icon(
           CupertinoIcons.back,
-          color: Color(0xFF9FA8B3),
+          color: AppColors.grayChateau,
         ),
         onPressed: feedBloc.pop,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       centerTitle: true,
       title: Text(
         'Photo',
@@ -119,9 +114,9 @@ class FullScreenImageState extends State<FullScreenImage> {
         child: ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(17)),
           child: Container(
-            color: Color(0xFFD2D2D2),
+            color: AppColors.alto,
             child: CachedNetworkImage(
-              imageUrl: widget.photo.urls.regular,
+              imageUrl: feedBloc.regularPhoto(widget.index),
               placeholder: (context, url) => Center(
                 child: CircularProgressIndicator(),
               ),
@@ -145,7 +140,7 @@ class FullScreenImageState extends State<FullScreenImage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  feedBloc.nameFull,
+                  feedBloc.name(widget.index),
                   style: TextStyle(
                     color: Color(0xFF000000),
                     fontWeight: FontWeight.bold,
@@ -156,9 +151,9 @@ class FullScreenImageState extends State<FullScreenImage> {
                   ),
                 ),
                 Text(
-                  feedBloc.usernameFull,
+                  feedBloc.username(widget.index),
                   style: TextStyle(
-                    color: Color(0xFF8E8E93),
+                    color: AppColors.manatee,
                     fontWeight: FontWeight.normal,
                     fontFamily: 'Roboto',
                     fontStyle: FontStyle.normal,
@@ -183,14 +178,14 @@ class FullScreenImageState extends State<FullScreenImage> {
           ),
           Expanded(
             child: _buildButton(() {
-              final downloadLink = feedBloc.downloadFull;
+              final downloadLink = feedBloc.download(widget.index);
               feedBloc.downloadPhoto(downloadLink);
             }, 'Save'),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: _buildButton(() {
-              final htmlFull = feedBloc.htmlFull;
+              final htmlFull = feedBloc.html(widget.index);
               feedBloc.launchUrl(htmlFull);
             }, 'Visit'),
           ),
@@ -201,7 +196,7 @@ class FullScreenImageState extends State<FullScreenImage> {
 
   Widget _buildUserAvatar() {
     return GestureDetector(
-      onTap: feedBloc.goToUserScreenFull,
+      onTap: () => feedBloc.goToUserScreen(widget.index),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50),
         child: Container(
@@ -209,7 +204,7 @@ class FullScreenImageState extends State<FullScreenImage> {
           height: _kImageSize,
           width: _kImageSize,
           child: CachedNetworkImage(
-            imageUrl: feedBloc.profileImageLargeFull,
+            imageUrl: feedBloc.profileImageLarge(widget.index),
             fit: BoxFit.fill,
           ),
         ),
@@ -225,13 +220,13 @@ class FullScreenImageState extends State<FullScreenImage> {
         alignment: Alignment.center,
         height: 36,
         decoration: BoxDecoration(
-          color: Color(0xFF39CEFD),
+          color: AppColors.dodgerBlue,
           borderRadius: BorderRadius.circular(7),
         ),
         child: Text(
           text,
           style: TextStyle(
-            color: Color(0xFFFFFFFF),
+            color: AppColors.alto,
             fontWeight: FontWeight.w600,
             fontFamily: 'Roboto',
             fontStyle: FontStyle.normal,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
+import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
 
 typedef Future<List<FeedNetworkModel>> PageFuture(int index);
@@ -70,7 +71,7 @@ class UserPhotoState extends State<UserPhoto> with AutomaticKeepAliveClientMixin
         child: ClipRRect(
           borderRadius: BorderRadius.circular(7),
           child: Container(
-            color: const Color(0xFFD2D2D2),
+            color: AppColors.alto,
             height: widget.userBloc.caclulateImageHeight(context, index, widget.type),
             child: CachedNetworkImage(
               imageUrl: widget.userBloc.regularUserFeedPhoto(index, widget.type),
