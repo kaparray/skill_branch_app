@@ -48,7 +48,12 @@ class FeedBloc extends BaseBloc {
         throw StreamError.connectionError;
       } else {
         likedByUser = await _api.likeUnlikePhoto(id, likedByUser);
-        allPhotos.where((photo) => photo.id == id).toList()[0].likedByUser = likedByUser;
+        allPhotos[index].likedByUser = likedByUser;
+
+        if (likedByUser)
+          allPhotos[index].likes++;
+        else
+          allPhotos[index].likes--;
 
         return likedByUser;
       }

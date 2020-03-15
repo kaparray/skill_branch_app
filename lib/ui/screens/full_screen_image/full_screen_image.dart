@@ -79,8 +79,8 @@ class FullScreenImageState extends State<FullScreenImage> {
 
     return LikeButton(
      // onChange: () async => await feedBloc.likePhoto(photoId, likedByUser),
-      isLike: feedBloc.likedByUserFull,
-      likeCounter: feedBloc.likesFull,
+      // isLike: feedBloc.likedByUserFull,
+      // likeCounter: feedBloc.likesFull,
     );
   }
 

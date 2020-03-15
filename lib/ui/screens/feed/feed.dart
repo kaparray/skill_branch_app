@@ -131,9 +131,8 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
 
   Widget _buildLikeButton(int index) {
     return LikeButton(
-      onChange: () async => await feedBloc.likePhoto(index),
-      isLike: feedBloc.likedByUser(index),
-      likeCounter: feedBloc.likes(index),
+      feedBloc: feedBloc,
+      index: index,
     );
   }
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:skill_branch_flutter/blocs/blocs.dart';
 
 typedef Future<bool> LikeFunc();
 
 class LikeButton extends StatefulWidget {
-  LikeButton({this.onChange, this.isLike = false, this.likeCounter});
+  LikeButton({this.feedBloc, this.index});
 
-  final LikeFunc onChange;
-  final bool isLike;
-  final int likeCounter;
+  final FeedBloc feedBloc;
+  final int index;
 
   @override
   State<StatefulWidget> createState() {
@@ -16,23 +16,12 @@ class LikeButton extends StatefulWidget {
 }
 
 class LikeButtonState extends State<LikeButton> {
-  bool isLike;
-  int likeCounter;
-
-  @override
-  void initState() {
-    super.initState();
-    isLike = widget.isLike;
-    likeCounter = widget.likeCounter;
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        isLike = await widget.onChange();
-        isLike ? likeCounter++ : likeCounter--;
+        await widget.feedBloc.likePhoto(widget.index);
         setState(() {});
       },
       child: Center(
@@ -45,11 +34,11 @@ class LikeButtonState extends State<LikeButton> {
                 'assets/icons/like.png',
                 width: 21,
                 height: 18.3,
-                color: isLike ? Colors.red : Colors.black,
+                color: widget.feedBloc.likedByUser(widget.index) ? Colors.red : Colors.black,
               ),
               SizedBox(width: 4.21),
               Text(
-                likeCounter.toString(),
+                widget.feedBloc.likes(widget.index).toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF000000),

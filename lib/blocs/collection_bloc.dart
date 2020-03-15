@@ -36,7 +36,6 @@ class CollectionBloc extends BaseBloc {
       return [];
     } else {
       List<FeedNetworkModel> userFeed = await _api.requestCollectionsPhotos(id, index);
-      print('data = ${userFeed[index].urls.full}');
 
       cacheCollectionPhoto.addAll(userFeed);
       _collectionPhotoController.add(StreamData(data: cacheCollectionPhoto));
