@@ -53,7 +53,7 @@ class UserPhotoState extends State<UserPhoto> with AutomaticKeepAliveClientMixin
       },
       errorBuilder: (context, error) => ErrorWidget(),
       loadingBuilder: (BuildContext context) {
-        return Container();
+        return CircularProgressIndicator();
       },
       noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
     );

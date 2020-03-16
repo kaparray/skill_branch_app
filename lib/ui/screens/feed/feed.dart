@@ -6,6 +6,7 @@ import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/base/inhereted_widget.dart';
 import 'package:skill_branch_flutter/di/injector.dart';
 import 'package:skill_branch_flutter/res/colors.dart';
+import 'package:skill_branch_flutter/res/styles.dart';
 import 'package:skill_branch_flutter/ui/lib/like_button.dart';
 
 import 'package:kiwi/kiwi.dart' as kiwi;
@@ -68,15 +69,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                 feedBloc.altDescription(index),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: AppColors.manatee,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Roboto',
-                  fontStyle: FontStyle.normal,
-                  fontSize: 14,
-                  height: 20 / 14,
-                  letterSpacing: 0.25,
-                ),
+                style: AppStyles.text5.copyWith(color: AppColors.manatee),
               ),
             ),
         ],
@@ -100,26 +93,11 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                 children: <Widget>[
                   Text(
                     feedBloc.username(index),
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Roboto',
-                      fontStyle: FontStyle.normal,
-                      fontSize: 17,
-                      height: 22 / 17,
-                      letterSpacing: -0.41,
-                    ),
+                    style: AppStyles.text4,
                   ),
                   Text(
                     "@${feedBloc.username(index)}",
-                    style: TextStyle(
-                      color: AppColors.manatee,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Roboto',
-                      fontStyle: FontStyle.normal,
-                      fontSize: 13,
-                      height: 18 / 13,
-                    ),
+                    style: AppStyles.textBlack1.copyWith(color: AppColors.manatee),
                   ),
                 ],
               ),
@@ -133,8 +111,9 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
 
   Widget _buildLikeButton(int index) {
     return LikeButton(
-      feedBloc: feedBloc,
-      index: index,
+      likeCount: feedBloc.likes(index),
+      isLiked: feedBloc.likedByUser(index),
+      likePhoto: () => feedBloc.likePhoto(index),
     );
   }
 
@@ -165,9 +144,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
             height: feedBloc.calculatePhotoHeight(context, index),
             child: CachedNetworkImage(
               imageUrl: feedBloc.regularPhoto(index),
-              placeholder: (context, url) => Center(
-                child: CircularProgressIndicator(),
-              ),
+              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => Icon(Icons.error),
               fit: BoxFit.fill,
             ),

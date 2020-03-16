@@ -1,20 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:skill_branch_flutter/blocs/blocs.dart';
-import 'package:skill_branch_flutter/di/injector.dart';
+import 'package:skill_branch_flutter/blocs/image_bloc.dart';
+import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
-import 'package:kiwi/kiwi.dart' as kiwi;
 
 import 'package:flutter/cupertino.dart';
+import 'package:skill_branch_flutter/res/styles.dart';
 import 'package:skill_branch_flutter/ui/lib/like_button.dart';
 
 const double _kImageSize = 42;
 
 class FullScreenImage extends StatefulWidget {
-  FullScreenImage({this.heroTag, this.index});
+  FullScreenImage({this.heroTag, this.photo});
 
   final String heroTag;
-  final int index;
+  final FeedNetworkModel photo;
 
   @override
   State<StatefulWidget> createState() {
@@ -23,13 +23,12 @@ class FullScreenImage extends StatefulWidget {
 }
 
 class FullScreenImageState extends State<FullScreenImage> {
-  FeedBloc feedBloc;
+  ImageBloc imageBloc;
 
   @override
   void initState() {
     super.initState();
-    var container = kiwi.Container();
-    feedBloc = container<FeedService>().feedBloc;
+    imageBloc = ImageBloc(widget.photo);
   }
 
   @override
@@ -43,22 +42,14 @@ class FullScreenImageState extends State<FullScreenImage> {
           children: <Widget>[
             _buildHeroImage(),
             const SizedBox(height: 11),
-            if (feedBloc.altDescription(widget.index) != null)
+            if (imageBloc.altDescription != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
-                  feedBloc.altDescription(widget.index),
+                  imageBloc.altDescription,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: AppColors.manatee,
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'Roboto',
-                    fontStyle: FontStyle.normal,
-                    fontSize: 14,
-                    height: 20 / 14,
-                    letterSpacing: 0.25,
-                  ),
+                  style: AppStyles.text5,
                 ),
               ),
             const SizedBox(height: 9),
@@ -73,8 +64,9 @@ class FullScreenImageState extends State<FullScreenImage> {
 
   Widget _buildLikeButton() {
     return LikeButton(
-      feedBloc: feedBloc,
-      index: widget.index,
+      likeCount: imageBloc.likes,
+      isLiked: imageBloc.likedByUser,
+      likePhoto: () => imageBloc.likePhoto(),
     );
   }
 
@@ -86,21 +78,13 @@ class FullScreenImageState extends State<FullScreenImage> {
           CupertinoIcons.back,
           color: AppColors.grayChateau,
         ),
-        onPressed: feedBloc.pop,
+        onPressed: imageBloc.pop,
       ),
       backgroundColor: AppColors.white,
       centerTitle: true,
       title: Text(
         'Photo',
-        style: TextStyle(
-          letterSpacing: -0.41,
-          color: Colors.black,
-          fontWeight: FontWeight.w600,
-          fontFamily: 'Roboto',
-          fontStyle: FontStyle.normal,
-          fontSize: 17,
-          height: 22 / 17,
-        ),
+        style: AppStyles.text4,
       ),
     );
   }
@@ -115,7 +99,7 @@ class FullScreenImageState extends State<FullScreenImage> {
           child: Container(
             color: AppColors.alto,
             child: CachedNetworkImage(
-              imageUrl: feedBloc.regularPhoto(widget.index),
+              imageUrl: imageBloc.regularPhoto,
               placeholder: (context, url) => Center(
                 child: CircularProgressIndicator(),
               ),
@@ -130,40 +114,24 @@ class FullScreenImageState extends State<FullScreenImage> {
 
   Widget _buildPhotoMeta() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Row(
-          children: [
-            _buildUserAvatar(),
-            SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  feedBloc.name(widget.index),
-                  style: TextStyle(
-                    color: Color(0xFF000000),
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Roboto',
-                    fontStyle: FontStyle.normal,
-                    fontSize: 18,
-                    height: 23 / 18,
-                  ),
-                ),
-                Text(
-                  feedBloc.username(widget.index),
-                  style: TextStyle(
-                    color: AppColors.manatee,
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'Roboto',
-                    fontStyle: FontStyle.normal,
-                    fontSize: 13,
-                    height: 18 / 13,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ));
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Row(
+        children: [
+          _buildUserAvatar(),
+          SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                imageBloc.name,
+                style: AppStyles.textBlack2,
+              ),
+              Text(imageBloc.username, style: AppStyles.textBlack1.copyWith(color: AppColors.manatee)),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildActionButton() {
@@ -176,16 +144,12 @@ class FullScreenImageState extends State<FullScreenImage> {
             child: _buildLikeButton(),
           ),
           Expanded(
-            child: _buildButton(() {
-              final downloadLink = feedBloc.download(widget.index);
-              feedBloc.downloadPhoto(downloadLink);
-            }, 'Save'),
+            child: _buildButton(imageBloc.downloadPhoto, 'Save'),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: _buildButton(() {
-              final htmlFull = feedBloc.html(widget.index);
-              feedBloc.launchUrl(htmlFull);
+              imageBloc.openInWeb();
             }, 'Visit'),
           ),
         ],
@@ -195,7 +159,7 @@ class FullScreenImageState extends State<FullScreenImage> {
 
   Widget _buildUserAvatar() {
     return GestureDetector(
-      onTap: () => feedBloc.goToUserScreen(widget.index),
+      onTap: () => imageBloc.goToUserScreen(),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50),
         child: Container(
@@ -203,7 +167,7 @@ class FullScreenImageState extends State<FullScreenImage> {
           height: _kImageSize,
           width: _kImageSize,
           child: CachedNetworkImage(
-            imageUrl: feedBloc.profileImageLarge(widget.index),
+            imageUrl: imageBloc.profileImageLarge,
             fit: BoxFit.fill,
           ),
         ),
@@ -224,15 +188,7 @@ class FullScreenImageState extends State<FullScreenImage> {
         ),
         child: Text(
           text,
-          style: TextStyle(
-            color: AppColors.alto,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Roboto',
-            fontStyle: FontStyle.normal,
-            fontSize: 14,
-            height: 16 / 14,
-            letterSpacing: 0.75,
-          ),
+          style: AppStyles.text6.copyWith(color: AppColors.white),
         ),
       ),
     );

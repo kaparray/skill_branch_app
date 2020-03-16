@@ -11,6 +11,7 @@ import 'package:skill_branch_flutter/redux/connectivity/connectivity_actions.dar
 import 'package:skill_branch_flutter/redux/store.dart';
 import 'package:skill_branch_flutter/redux/user/user_actions.dart';
 import 'package:skill_branch_flutter/res/res.dart';
+import 'package:skill_branch_flutter/res/styles.dart';
 import 'package:skill_branch_flutter/ui/lib/tab_bar/bottom_navigation_bar.dart';
 import 'package:skill_branch_flutter/ui/screens/feed/feed.dart';
 import 'package:skill_branch_flutter/ui/screens/search/search.dart';
@@ -130,15 +131,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     Text(
                       'There was an error loading the feed',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColors.manatee,
-                        fontFamily: 'Roboto',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17,
-                        height: 22 / 17,
-                        letterSpacing: -0.41,
-                      ),
+                      style: AppStyles.text4.copyWith(color: AppColors.manatee),
                     ),
                   ],
                 ),

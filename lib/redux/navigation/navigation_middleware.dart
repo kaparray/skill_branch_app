@@ -45,7 +45,7 @@ class NavigationMiddleware extends MiddlewareClass<AppState> {
           MaterialPageRoute(
             builder: (BuildContext context) => FullScreenImage(
               heroTag: (action.payload as Map)['heroTag'],
-             index: (action.payload as Map)['index'],
+              photo: (action.payload as Map)['photo'],
             ),
           ),
         );

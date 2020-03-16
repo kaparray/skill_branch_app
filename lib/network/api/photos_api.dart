@@ -36,6 +36,7 @@ class PhotosApi extends BaseApi {
       } else {
         response = await makeRequest(url, type: RequestType.post);
       }
+
       print("response  ${response.body}");
       Map<String, dynamic> responseParse = json.decode(response.body);
 

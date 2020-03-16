@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +5,7 @@ import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/search_bloc.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
+import 'package:skill_branch_flutter/res/styles.dart';
 import 'package:skill_branch_flutter/static.dart';
 import 'package:skill_branch_flutter/ui/lib/empty.dart';
 
@@ -75,15 +74,7 @@ class SearchViewState extends State<SearchView> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Search',
-                          hintStyle: TextStyle(
-                            height: 22 / 17,
-                            fontSize: 17,
-                            fontFamily: 'Roboto',
-                            color: AppColors.manatee,
-                            fontWeight: FontWeight.normal,
-                            fontStyle: FontStyle.normal,
-                            letterSpacing: -0.41,
-                          ),
+                          hintStyle: AppStyles.text4.copyWith(color: AppColors.manatee),
                         ),
                         onSubmitted: (String value) {
                           searchBloc.lastSearchWord = value;
@@ -106,15 +97,9 @@ class SearchViewState extends State<SearchView> {
               pageLoadController: controller,
               padding: EdgeInsets.all(15.0),
               showRetry: false,
-              itemBuilder: (BuildContext context, entry, int index) {
-                return buildImage(entry);
-              },
-              errorBuilder: (BuildContext context, Object error) {
-                return Container(color: Colors.red);
-              },
-              loadingBuilder: (BuildContext context) {
-                return CircularProgressIndicator();
-              },
+              itemBuilder: (BuildContext context, entry, int index) => buildImage(entry),
+              errorBuilder: (BuildContext context, Object error) => Container(color: Colors.red),
+              loadingBuilder: (BuildContext context) => CircularProgressIndicator(),
               noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
             ),
           ),

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:image_downloader/image_downloader.dart';
 import 'package:skill_branch_flutter/base/base_bloc.dart';
 import 'package:skill_branch_flutter/network/api/apis.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
@@ -10,7 +9,6 @@ import 'package:skill_branch_flutter/redux/navigation/navigation_actions.dart';
 import 'package:skill_branch_flutter/redux/navigation/routes.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
 import 'package:skill_branch_flutter/redux/user/user_actions.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 enum OrderBy { latest, oldest, popular }
 
@@ -73,24 +71,7 @@ class FeedBloc extends BaseBloc {
   }
 
   void goToFullScreen(int index) {
-    store.dispatch(RouteTo(Routes.fullScreen, payload: {'index': index, 'heroTag': 'feed$index'}));
-  }
-
-  void launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  void downloadPhoto(String downloadLink) {
-    ImageDownloader.downloadImage(downloadLink).then((_) async {
-      store.dispatch(DialogAction(Dialogs.done));
-      await Future.delayed(Duration(milliseconds: 1500)).then((_) {
-        store.dispatch(DialogAction(Dialogs.close));
-      });
-    });
+    store.dispatch(RouteTo(Routes.fullScreen, payload: {'photo': allPhotos[index], 'heroTag': 'feed$index'}));
   }
 
   double calculatePhotoHeight(BuildContext context, int index) {
@@ -108,9 +89,6 @@ class FeedBloc extends BaseBloc {
   String name(int index) => allPhotos[index]?.user?.name ?? 'No name :(';
   String download(int index) => allPhotos[index].links?.download ?? '';
   String html(int index) => allPhotos[index].links?.html ?? '';
-
-  @override
-  void dispose() {}
 
   @override
   void init() {}

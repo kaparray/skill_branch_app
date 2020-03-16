@@ -5,6 +5,7 @@ import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
 import 'package:skill_branch_flutter/res/res.dart';
+import 'package:skill_branch_flutter/res/styles.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_collections.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_photo.dart';
 
@@ -137,14 +138,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                             const SizedBox(width: 10),
                             Text(
                               userBloc.location,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                height: 18 / 13,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.normal,
-                                letterSpacing: -0.08,
-                                color: Color(0xFF000000),
-                              ),
+                              style: AppStyles.textBlack1,
                             ),
                           ],
                         ),
@@ -162,14 +156,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                               const SizedBox(width: 10),
                               Text(
                                 userBloc.portfolioUrl,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  height: 18 / 13,
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.normal,
-                                  letterSpacing: -0.08,
-                                  color: AppColors.black,
-                                ),
+                                style: AppStyles.textBlack1,
                               ),
                             ],
                           ),
@@ -181,14 +168,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
               const SizedBox(height: 16),
               Text(
                 userBloc.profileBio,
-                style: TextStyle(
-                  letterSpacing: -0.24,
-                  fontSize: 12,
-                  height: 20 / 12,
-                  fontWeight: FontWeight.w300,
-                  fontFamily: 'Roboto',
-                  fontStyle: FontStyle.normal,
-                ),
+                style: AppStyles.text3,
               ),
             ],
           ),
@@ -207,23 +187,12 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
           children: <Widget>[
             Text(
               userBloc.followersCount,
-              style: const TextStyle(
-                fontSize: 23,
-                height: 23 / 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.dodgerBlue,
-              ),
+              style: AppStyles.textBlack2.copyWith(color: AppColors.dodgerBlue),
             ),
             const SizedBox(height: 1),
-            const Text(
+            Text(
               'followers',
-              style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.black,
-                  height: 18 / 13,
-                  fontWeight: FontWeight.normal,
-                  fontStyle: FontStyle.normal,
-                  fontFamily: 'Roboto'),
+              style: AppStyles.textBlack1,
             ),
           ],
         ),
@@ -233,23 +202,12 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
           children: <Widget>[
             Text(
               userBloc.followingCount,
-              style: const TextStyle(
-                fontSize: 23,
-                height: 23 / 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.dodgerBlue,
-              ),
+              style: AppStyles.textBlack2.copyWith(color: AppColors.dodgerBlue),
             ),
             const SizedBox(height: 1),
-            const Text(
+            Text(
               'following',
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.normal,
-                  color: AppColors.black,
-                  height: 18 / 13,
-                  fontStyle: FontStyle.normal,
-                  fontFamily: 'Roboto'),
+              style: AppStyles.textBlack1,
             ),
           ],
         ),

@@ -48,7 +48,7 @@ class UserCollectionsState extends State<UserCollections> with AutomaticKeepAliv
       },
       errorBuilder: (context, error) => ErrorWidget(),
       loadingBuilder: (BuildContext context) {
-        return Container();
+        return CircularProgressIndicator();
       },
       noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
     );
