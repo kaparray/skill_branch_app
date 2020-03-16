@@ -11,7 +11,7 @@ import 'package:skill_branch_flutter/redux/user/user_state.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  group('User store test', () {
+  group('connectivity store test', () {
     Store<AppState> store;
 
     setUp(() async {
