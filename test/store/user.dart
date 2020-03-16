@@ -11,7 +11,7 @@ import 'package:skill_branch_flutter/redux/user/user_state.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  group('Balance store test', () {
+  group('User store test', () {
     Store<AppState> store;
 
     setUp(() async {
@@ -27,7 +27,7 @@ void main() {
       );
     });
 
-    test('test balance reducer', () {
+    test('test connectivityState', () {
       expect(store.state.connectivityState.connectivityResult, ConnectivityResult.none);
 
       store.dispatch(ConnectivityAction(ConnectivityResult.wifi));
