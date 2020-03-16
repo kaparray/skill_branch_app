@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:skill_branch_flutter/res/colors.dart';
 
-class EmptyWidget extends StatelessWidget {
+class ErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: Container(
           padding: EdgeInsets.all(15),
-          color: AppColors.grayChateau,
+          color: AppColors.amaranth,
           child: Row(
             children: <Widget>[
               Image.asset('assets/icons/warning.png'),
               const SizedBox(width: 15),
               Text(
-                'Feed is empty',
+                'There was an error loading the feed',
                 style: TextStyle(
                   color: AppColors.white,
                   fontFamily: 'Roboto',

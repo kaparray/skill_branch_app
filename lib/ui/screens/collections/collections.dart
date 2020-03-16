@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' hide ErrorWidget;
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/collection_bloc.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/colors.dart';
 import 'package:skill_branch_flutter/ui/lib/empty.dart';
+import 'package:skill_branch_flutter/ui/lib/error.dart';
 
 class CollectionsView extends StatefulWidget {
   CollectionsView(this.collection);
@@ -44,9 +44,7 @@ class CollectionsViewState extends State<CollectionsView> {
         itemBuilder: (BuildContext context, FeedNetworkModel _, int index) {
           return buildImage(index);
         },
-        errorBuilder: (BuildContext context, Object error) {
-          return Container();
-        },
+        errorBuilder: (context, error) => ErrorWidget(),
         loadingBuilder: (BuildContext context) {
           return CircularProgressIndicator();
         },

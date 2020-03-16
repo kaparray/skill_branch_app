@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ErrorWidget;
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/ui/lib/empty.dart';
+import 'package:skill_branch_flutter/ui/lib/error.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
 
 typedef Future<List<FeedNetworkModel>> PageFuture(int index);
@@ -36,6 +37,7 @@ class UserPhotoState extends State<UserPhoto> with AutomaticKeepAliveClientMixin
       crossAxisSpacing: 10,
       childAspectRatio: 1,
       pageSize: 12,
+      showRetry: false,
       pageFuture: (int pageIndex) async {
         switch (widget.type) {
           case UserPhotoType.userPhotos:
@@ -49,9 +51,7 @@ class UserPhotoState extends State<UserPhoto> with AutomaticKeepAliveClientMixin
       itemBuilder: (BuildContext context, FeedNetworkModel data, int index) {
         return buildImage(index);
       },
-      retryBuilder: (BuildContext context, Object error) {
-        return Container();
-      },
+      errorBuilder: (context, error) => ErrorWidget(),
       loadingBuilder: (BuildContext context) {
         return Container();
       },

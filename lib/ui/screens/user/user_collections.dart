@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ErrorWidget;
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/static.dart';
 import 'package:skill_branch_flutter/ui/lib/empty.dart';
+import 'package:skill_branch_flutter/ui/lib/error.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
 
 const double _kImageWidth = 100;
@@ -38,15 +39,14 @@ class UserCollectionsState extends State<UserCollections> with AutomaticKeepAliv
       crossAxisSpacing: 10,
       childAspectRatio: 1,
       pageSize: kPerPageUserPhotos,
+      showRetry: false,
       pageFuture: (int pageIndex) async {
         return await widget.userBloc.getCollectionsUserPhotos(pageIndex + 1);
       },
       itemBuilder: (BuildContext context, Collections data, int index) {
         return buildImage(index);
       },
-      retryBuilder: (BuildContext context, Object error) {
-        return Container();
-      },
+      errorBuilder: (context, error) => ErrorWidget(),
       loadingBuilder: (BuildContext context) {
         return Container();
       },
