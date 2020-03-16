@@ -206,7 +206,6 @@ abstract class BaseApi {
     else
       headers.addAll({"Authorization": "Client-ID ${container.baseAccessKey}"});
 
-    print('headers = $headers');
     return headers;
   }
     AppState get state => store.state;

@@ -27,12 +27,10 @@ class UserProfile extends StatefulWidget {
 
 class UserProfileState extends State<UserProfile> with SingleTickerProviderStateMixin {
   UserBloc userBloc;
-  TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
 
     if (widget.isMyProfile) {
       UserNetworkModel userData = store.state.userState.userData;
@@ -42,11 +40,15 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
       userBloc = UserBloc(widget.user);
       userBloc.init();
     }
+
+    userBloc.tabController = TabController(length: 3, vsync: this);
+    userBloc.startTabListen();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: _buildAppbar(),
       body: DefaultTabController(
         length: 3,
@@ -57,9 +59,14 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
           body: Column(
             children: <Widget>[
               _buildTabBar(),
+              const Divider(
+                color: AppColors.mercury,
+                thickness: 2,
+                height: 1,
+              ),
               Expanded(
                 child: TabBarView(
-                  controller: _tabController,
+                  controller: userBloc.tabController,
                   children: <Widget>[
                     UserPhoto(userBloc, UserPhotoType.userPhotos),
                     UserPhoto(userBloc, UserPhotoType.likeUserPhotos),
@@ -208,9 +215,9 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
               ),
             ),
             const SizedBox(height: 1),
-            Text(
+            const Text(
               'followers',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 13,
                   color: AppColors.black,
                   height: 18 / 13,
@@ -234,9 +241,9 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
               ),
             ),
             const SizedBox(height: 1),
-            Text(
+            const Text(
               'following',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.normal,
                   color: AppColors.black,
@@ -251,31 +258,42 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
   }
 
   Widget _buildTabBar() {
-    return TabBar(
-      controller: _tabController,
-      indicatorColor: Theme.of(context).primaryColor,
-      indicator: UnderlineTabIndicator(
-        borderSide: BorderSide(width: _kBorderSidewidth, color: AppColors.dodgerBlue),
-        insets: EdgeInsets.symmetric(
-          horizontal: userBloc.horizontalInsets(context),
-        ),
-      ),
-      labelColor: AppColors.dodgerBlue,
-      unselectedLabelColor: Colors.blue[300].withOpacity(0.75),
-      tabs: [
-        Padding(
-          padding: EdgeInsets.all(12),
-          child: Image.asset('assets/icons/home.png', color: Colors.black),
-        ),
-        Padding(
-          padding: EdgeInsets.all(12),
-          child: Image.asset('assets/icons/like.png'),
-        ),
-        Padding(
-          padding: EdgeInsets.all(12),
-          child: Image.asset('assets/icons/bookmark.png'),
-        ),
-      ],
-    );
+    return StreamBuilder(
+        stream: userBloc.tabStream,
+        builder: (BuildContext context, snapshot) {
+          return TabBar(
+            controller: userBloc.tabController,
+            indicatorColor: Theme.of(context).primaryColor,
+            indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(width: _kBorderSidewidth, color: AppColors.dodgerBlue),
+              insets: EdgeInsets.symmetric(
+                horizontal: userBloc.horizontalInsets(context),
+              ),
+            ),
+            tabs: [
+              Padding(
+                padding: EdgeInsets.all(12),
+                child: Image.asset(
+                  'assets/icons/home.png',
+                  color: snapshot.data == 0 ? AppColors.dodgerBlue : AppColors.black,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(12),
+                child: Image.asset(
+                  'assets/icons/like.png',
+                  color: snapshot.data == 1 ? AppColors.dodgerBlue : AppColors.black,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(12),
+                child: Image.asset(
+                  'assets/icons/bookmark.png',
+                  color: snapshot.data == 2 ? AppColors.dodgerBlue : AppColors.black,
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

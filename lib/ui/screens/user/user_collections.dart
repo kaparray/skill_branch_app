@@ -5,6 +5,7 @@ import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/static.dart';
+import 'package:skill_branch_flutter/ui/lib/empty.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
 
 const double _kImageWidth = 100;
@@ -49,11 +50,7 @@ class UserCollectionsState extends State<UserCollections> with AutomaticKeepAliv
       loadingBuilder: (BuildContext context) {
         return Container();
       },
-      noItemsFoundBuilder: (BuildContext context) {
-        return Center(
-          child: const Text('Нет элементов'),
-        );
-      },
+      noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
     );
   }
 

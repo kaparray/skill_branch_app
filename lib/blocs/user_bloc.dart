@@ -16,6 +16,10 @@ class UserBloc extends BaseBloc {
   UserBloc(this._cacheUserInfo) {
     _userInfoController.add(StreamData(data: _cacheUserInfo));
   }
+  TabController tabController;
+
+  final _tabStreamController = StreamController<int>();
+  Stream<int> get tabStream => _tabStreamController.stream;
 
   final _api = UserApi();
 
@@ -30,6 +34,12 @@ class UserBloc extends BaseBloc {
   @override
   void init() {
     getUserInfo();
+  }
+
+  void startTabListen() {
+    tabController.addListener(() {
+      _tabStreamController.add(tabController.index);
+    });
   }
 
   @override

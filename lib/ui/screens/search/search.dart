@@ -8,6 +8,7 @@ import 'package:skill_branch_flutter/blocs/search_bloc.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/static.dart';
+import 'package:skill_branch_flutter/ui/lib/empty.dart';
 
 class SearchView extends StatefulWidget {
   SearchView({Key key}) : super(key: key);
@@ -114,11 +115,7 @@ class SearchViewState extends State<SearchView> {
               loadingBuilder: (BuildContext context) {
                 return CircularProgressIndicator();
               },
-              noItemsFoundBuilder: (BuildContext context) {
-                return Center(
-                  child: Text('Нет элементов :('),
-                );
-              },
+              noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
             ),
           ),
         ]),

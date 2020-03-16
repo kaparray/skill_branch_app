@@ -5,6 +5,7 @@ import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/collection_bloc.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/colors.dart';
+import 'package:skill_branch_flutter/ui/lib/empty.dart';
 
 class CollectionsView extends StatefulWidget {
   CollectionsView(this.collection);
@@ -49,11 +50,7 @@ class CollectionsViewState extends State<CollectionsView> {
         loadingBuilder: (BuildContext context) {
           return CircularProgressIndicator();
         },
-        noItemsFoundBuilder: (BuildContext context) {
-          return Center(
-            child: Text('Нет элементов :('),
-          );
-        },
+        noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
       ),
     );
   }

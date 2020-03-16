@@ -4,6 +4,7 @@ import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
+import 'package:skill_branch_flutter/ui/lib/empty.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
 
 typedef Future<List<FeedNetworkModel>> PageFuture(int index);
@@ -54,11 +55,7 @@ class UserPhotoState extends State<UserPhoto> with AutomaticKeepAliveClientMixin
       loadingBuilder: (BuildContext context) {
         return Container();
       },
-      noItemsFoundBuilder: (BuildContext context) {
-        return Center(
-          child: const Text('Нет элементов'),
-        );
-      },
+      noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
     );
   }
 
