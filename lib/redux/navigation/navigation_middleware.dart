@@ -44,8 +44,9 @@ class NavigationMiddleware extends MiddlewareClass<AppState> {
         navigatorKey.currentState.push(
           MaterialPageRoute(
             builder: (BuildContext context) => FullScreenImage(
-                ((action.payload as Map)['photo'] as FeedNetworkModel),
-                (action.payload as Map)['heroTag']),
+              heroTag: (action.payload as Map)['heroTag'],
+             index: (action.payload as Map)['index'],
+            ),
           ),
         );
         break;
@@ -55,8 +56,7 @@ class NavigationMiddleware extends MiddlewareClass<AppState> {
           MaterialPageRoute(
             builder: (BuildContext context) => UserProfile(
               user: action.payload,
-              isMyProfile: (action.payload as UserNetworkModel).username ==
-                  action.payload,
+              isMyProfile: (action.payload as UserNetworkModel).username == action.payload,
             ),
           ),
         );
@@ -103,9 +103,8 @@ class NavigationMiddleware extends MiddlewareClass<AppState> {
         navigatorKey.currentState.push(
           DialogRoute(
             barrierDismissible: false,
-            pageBuilder: (BuildContext buildContext,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation) {
+            pageBuilder:
+                (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
               return Builder(builder: (BuildContext context) {
                 if (Platform.isAndroid) {
                   return WillPopScope(
@@ -125,9 +124,8 @@ class NavigationMiddleware extends MiddlewareClass<AppState> {
         navigatorKey.currentState.push(
           DialogRoute(
             barrierDismissible: false,
-            pageBuilder: (BuildContext buildContext,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation) {
+            pageBuilder:
+                (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
               return Builder(builder: (BuildContext context) {
                 return ErrorDialog();
               });
@@ -140,9 +138,8 @@ class NavigationMiddleware extends MiddlewareClass<AppState> {
         navigatorKey.currentState.push(
           DialogRoute(
             barrierDismissible: false,
-            pageBuilder: (BuildContext buildContext,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation) {
+            pageBuilder:
+                (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
               return Builder(builder: (BuildContext context) {
                 return DoneDialog();
               });

@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/di/injector.dart';
-import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 
@@ -12,7 +11,7 @@ import 'package:skill_branch_flutter/ui/lib/like_button.dart';
 const double _kImageSize = 42;
 
 class FullScreenImage extends StatefulWidget {
-  FullScreenImage(this.heroTag, this.index);
+  FullScreenImage({this.heroTag, this.index});
 
   final String heroTag;
   final int index;

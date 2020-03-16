@@ -73,7 +73,7 @@ class FeedBloc extends BaseBloc {
   }
 
   void goToFullScreen(int index) {
-    store.dispatch(RouteTo(Routes.fullScreen, payload: {'photo': allPhotos[index], 'heroTag': 'feed$index'}));
+    store.dispatch(RouteTo(Routes.fullScreen, payload: {'index': index, 'heroTag': 'feed$index'}));
   }
 
   void launchUrl(String url) async {

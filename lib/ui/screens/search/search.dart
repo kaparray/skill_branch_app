@@ -51,17 +51,49 @@ class SearchViewState extends State<SearchView> {
         child: Column(children: <Widget>[
           Padding(
             padding: EdgeInsets.all(12),
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Type like "Sunset"',
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF5F5F8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                      child: Icon(
+                        Icons.search,
+                        size: 20,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Search',
+                          hintStyle: TextStyle(
+                            height: 22 / 17,
+                            fontSize: 17,
+                            fontFamily: 'Roboto',
+                            color: AppColors.manatee,
+                            fontWeight: FontWeight.normal,
+                            fontStyle: FontStyle.normal,
+                            letterSpacing: -0.41,
+                          ),
+                        ),
+                        onSubmitted: (String value) {
+                          searchBloc.lastSearchWord = value;
+                          controller.reset();
+                          controller.fetchNewPage();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              onSubmitted: (String value) {
-                searchBloc.lastSearchWord = value;
-                controller.reset();
-                controller.fetchNewPage();
-              },
             ),
           ),
           Expanded(
@@ -95,16 +127,19 @@ class SearchViewState extends State<SearchView> {
   }
 
   Widget buildImage(FeedNetworkModel entry) {
-    return Container(
-      color: AppColors.alto,
-      height: (entry?.height ?? 1.0) * MediaQuery.of(context).size.width / (entry?.width ?? 1.0),
-      child: CachedNetworkImage(
-        imageUrl: entry.urls?.regular ?? '',
-        placeholder: (context, url) => Center(
-          child: CircularProgressIndicator(),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(7),
+      child: Container(
+        color: AppColors.alto,
+        height: (entry?.height ?? 1.0) * MediaQuery.of(context).size.width / (entry?.width ?? 1.0),
+        child: CachedNetworkImage(
+          imageUrl: entry.urls?.regular ?? '',
+          placeholder: (context, url) => Center(
+            child: CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+          fit: BoxFit.cover,
         ),
-        errorWidget: (context, url, error) => Icon(Icons.error),
-        fit: BoxFit.cover,
       ),
     );
   }

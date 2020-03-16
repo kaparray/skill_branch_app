@@ -102,11 +102,12 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                     feedBloc.username(index),
                     style: TextStyle(
                       color: AppColors.black,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
                       fontStyle: FontStyle.normal,
-                      fontSize: 18,
-                      height: 23 / 18,
+                      fontSize: 17,
+                      height: 22 / 17,
+                      letterSpacing: -0.41,
                     ),
                   ),
                   Text(
