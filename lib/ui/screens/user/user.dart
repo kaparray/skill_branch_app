@@ -138,7 +138,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                             const SizedBox(width: 10),
                             Text(
                               userBloc.location,
-                              style: AppStyles.textBlack1,
+                              style: AppStyles.h5Black,
                             ),
                           ],
                         ),
@@ -156,7 +156,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                               const SizedBox(width: 10),
                               Text(
                                 userBloc.portfolioUrl,
-                                style: AppStyles.textBlack1,
+                                style: AppStyles.h5Black,
                               ),
                             ],
                           ),
@@ -168,7 +168,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
               const SizedBox(height: 16),
               Text(
                 userBloc.profileBio,
-                style: AppStyles.text3,
+                style: AppStyles.h6,
               ),
             ],
           ),
@@ -187,12 +187,12 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
           children: <Widget>[
             Text(
               userBloc.followersCount,
-              style: AppStyles.textBlack2.copyWith(color: AppColors.dodgerBlue),
+              style: AppStyles.h1Black.copyWith(color: AppColors.dodgerBlue),
             ),
             const SizedBox(height: 1),
             Text(
               'followers',
-              style: AppStyles.textBlack1,
+              style: AppStyles.h5Black,
             ),
           ],
         ),
@@ -202,12 +202,12 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
           children: <Widget>[
             Text(
               userBloc.followingCount,
-              style: AppStyles.textBlack2.copyWith(color: AppColors.dodgerBlue),
+              style: AppStyles.h1Black.copyWith(color: AppColors.dodgerBlue),
             ),
             const SizedBox(height: 1),
             Text(
               'following',
-              style: AppStyles.textBlack1,
+              style: AppStyles.h5Black,
             ),
           ],
         ),

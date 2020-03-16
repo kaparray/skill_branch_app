@@ -74,7 +74,7 @@ class SearchViewState extends State<SearchView> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Search',
-                          hintStyle: AppStyles.text4.copyWith(color: AppColors.manatee),
+                          hintStyle: AppStyles.h2Black.copyWith(color: AppColors.manatee),
                         ),
                         onSubmitted: (String value) {
                           searchBloc.lastSearchWord = value;

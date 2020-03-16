@@ -131,7 +131,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     Text(
                       'There was an error loading the feed',
                       textAlign: TextAlign.center,
-                      style: AppStyles.text4.copyWith(color: AppColors.manatee),
+                      style: AppStyles.h2Black.copyWith(color: AppColors.manatee),
                     ),
                   ],
                 ),

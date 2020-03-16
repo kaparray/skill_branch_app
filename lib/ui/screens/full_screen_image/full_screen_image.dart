@@ -49,7 +49,7 @@ class FullScreenImageState extends State<FullScreenImage> {
                   imageBloc.altDescription,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: AppStyles.text5,
+                  style: AppStyles.h3,
                 ),
               ),
             const SizedBox(height: 9),
@@ -84,7 +84,7 @@ class FullScreenImageState extends State<FullScreenImage> {
       centerTitle: true,
       title: Text(
         'Photo',
-        style: AppStyles.text4,
+        style: AppStyles.h2Black,
       ),
     );
   }
@@ -124,9 +124,9 @@ class FullScreenImageState extends State<FullScreenImage> {
             children: <Widget>[
               Text(
                 imageBloc.name,
-                style: AppStyles.textBlack2,
+                style: AppStyles.h1Black,
               ),
-              Text(imageBloc.username, style: AppStyles.textBlack1.copyWith(color: AppColors.manatee)),
+              Text(imageBloc.username, style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
             ],
           ),
         ],
@@ -188,7 +188,7 @@ class FullScreenImageState extends State<FullScreenImage> {
         ),
         child: Text(
           text,
-          style: AppStyles.text6.copyWith(color: AppColors.white),
+          style: AppStyles.h4.copyWith(color: AppColors.white),
         ),
       ),
     );

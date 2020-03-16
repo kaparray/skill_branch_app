@@ -69,7 +69,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                 feedBloc.altDescription(index),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: AppStyles.text5.copyWith(color: AppColors.manatee),
+                style: AppStyles.h3.copyWith(color: AppColors.manatee),
               ),
             ),
         ],
@@ -93,11 +93,11 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                 children: <Widget>[
                   Text(
                     feedBloc.username(index),
-                    style: AppStyles.text4,
+                    style: AppStyles.h2Black,
                   ),
                   Text(
                     "@${feedBloc.username(index)}",
-                    style: AppStyles.textBlack1.copyWith(color: AppColors.manatee),
+                    style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
                   ),
                 ],
               ),
