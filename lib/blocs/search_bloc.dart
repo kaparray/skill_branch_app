@@ -17,6 +17,11 @@ class SearchBloc extends BaseBloc {
     _api = SearchApi();
   }
 
+  @override
+  dispose() {
+    userInfoController.close();
+  }
+
   Future<List<FeedNetworkModel>> search(int page) async {
     try {
       if (lastSearchWord != null && lastSearchWord.isNotEmpty) {
@@ -28,6 +33,8 @@ class SearchBloc extends BaseBloc {
     } catch (ex, trace) {
       print(ex);
       print(trace);
+
+      return [];
     }
   }
 }

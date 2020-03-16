@@ -25,6 +25,10 @@ class CollectionBloc extends BaseBloc {
     _collectionPhotoController.close();
   }
 
+  void pop() {
+    store.dispatch(RouteTo(Routes.pop));
+  }
+
   Future<List<FeedNetworkModel>> getCollectionPhotosById(String id, int index) async {
     if (cacheCollectionPhoto == null) {
       _collectionPhotoController.add(StreamData(inProgress: true));

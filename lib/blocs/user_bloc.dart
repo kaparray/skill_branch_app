@@ -126,7 +126,7 @@ class UserBloc extends BaseBloc {
     store.dispatch(RouteTo(Routes.collections, payload: cacheCollectionsUserFeed[index]));
   }
 
-  String get portfolioUrl {
+  get portfolioUrl {
     if (_cacheUserInfo?.portfolioUrl != null) {
       return _cacheUserInfo?.portfolioUrl?.replaceFirst('https://', '')?.replaceFirst('http://', '');
     }

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart' hide ErrorWidget;
 import 'package:flutter/material.dart' hide ErrorWidget;
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/collection_bloc.dart';
@@ -29,9 +30,9 @@ class CollectionsViewState extends State<CollectionsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 1000,
-      child: PagewiseGridView.count(
+    return Scaffold(
+      appBar: _buildAppbar(),
+      body: PagewiseGridView.count(
         crossAxisCount: 3,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
@@ -50,6 +51,22 @@ class CollectionsViewState extends State<CollectionsView> {
         },
         noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
       ),
+    );
+  }
+
+  AppBar _buildAppbar() {
+    return AppBar(
+      leading: IconButton(
+        icon: Icon(CupertinoIcons.back, color: Colors.black),
+        onPressed: collectionBloc.pop,
+      ),
+      backgroundColor: AppColors.white,
+      centerTitle: true,
+      title: Text(
+        'Collection',
+        style: TextStyle(color: Colors.black),
+      ),
+      elevation: 0.0,
     );
   }
 
