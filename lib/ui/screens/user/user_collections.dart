@@ -83,7 +83,7 @@ class UserCollectionsState extends State<UserCollections> with AutomaticKeepAliv
       child: Container(
         width: _kImageWidth,
         color: AppColors.alto,
-        height: widget.userBloc.caclulateImageHeight(context, index, UserPhotoType.userCollections),
+        height: widget.userBloc.calculateImageHeight(context, index, UserPhotoType.userCollections),
         child: CachedNetworkImage(
           imageUrl: widget.userBloc.regularUserFeedPhoto(index, UserPhotoType.userCollections),
           placeholder: (context, url) => Center(

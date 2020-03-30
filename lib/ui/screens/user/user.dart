@@ -9,7 +9,7 @@ import 'package:skill_branch_flutter/res/styles.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_collections.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_photo.dart';
 
-const double _kBorderSidewidth = 3.0;
+const double _kBorderSideWidth = 3.0;
 const double _kUserImageHeight = 72.0;
 
 enum UserPhotoType { userPhotos, likeUserPhotos, userCollections }
@@ -50,12 +50,12 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: _buildAppbar(),
+      appBar: _buildAppBar(),
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
           headerSliverBuilder: (context, _) {
-            return [SliverToBoxAdapter(child: _buildHederContant())];
+            return [SliverToBoxAdapter(child: _buildHederContact())];
           },
           body: Column(
             children: <Widget>[
@@ -82,7 +82,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
     );
   }
 
-  AppBar _buildAppbar() {
+  AppBar _buildAppBar() {
     return AppBar(
       leading: IconButton(
         icon: Icon(CupertinoIcons.back, color: Colors.black),
@@ -98,7 +98,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
     );
   }
 
-  Widget _buildHederContant() {
+  Widget _buildHederContact() {
     return StreamBuilder(
       stream: userBloc.userInfoStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -223,7 +223,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
             controller: userBloc.tabController,
             indicatorColor: Theme.of(context).primaryColor,
             indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(width: _kBorderSidewidth, color: AppColors.dodgerBlue),
+              borderSide: BorderSide(width: _kBorderSideWidth, color: AppColors.dodgerBlue),
               insets: EdgeInsets.symmetric(
                 horizontal: userBloc.horizontalInsets(context),
               ),

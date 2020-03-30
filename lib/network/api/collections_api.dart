@@ -8,7 +8,7 @@ import 'package:skill_branch_flutter/network/models/models.dart';
 class CollectionApi extends BaseApi {
   Future<List<FeedNetworkModel>> requestCollectionsPhotos(String collectionsId, int page) async {
     try {
-      String url ="/collections/$collectionsId/photos?${feedQueryParametrs(page)}";
+      String url ="/collections/$collectionsId/photos?${feedQueryParameters(page)}";
 
       final response = await makeRequest(url);
       List<FeedNetworkModel> userPhotos = feedNetworkModelFromJson(response.body);

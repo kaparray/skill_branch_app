@@ -31,7 +31,7 @@ class CollectionsViewState extends State<CollectionsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(),
+      appBar: _buildAppBar(),
       body: PagewiseGridView.count(
         crossAxisCount: 3,
         mainAxisSpacing: 10,
@@ -54,7 +54,7 @@ class CollectionsViewState extends State<CollectionsView> {
     );
   }
 
-  AppBar _buildAppbar() {
+  AppBar _buildAppBar() {
     return AppBar(
       leading: IconButton(
         icon: Icon(CupertinoIcons.back, color: Colors.black),

@@ -26,7 +26,7 @@ class UserApi extends BaseApi {
 
   Future<List<FeedNetworkModel>> requestUserPhotos(String username, int page) async {
     try {
-      String url = "/users/$username/photos?${feedQueryParametrs(page)}";
+      String url = "/users/$username/photos?${feedQueryParameters(page)}";
 
       http.Response response = await makeRequest(url);
       final userPhotos = feedNetworkModelFromJson(response.body);
@@ -43,7 +43,7 @@ class UserApi extends BaseApi {
 
   Future<List<FeedNetworkModel>> requestLikeUserPhotos(String username, int page) async {
     try {
-      String url = "/users/$username/likes?${feedQueryParametrs(page)}";
+      String url = "/users/$username/likes?${feedQueryParameters(page)}";
 
       http.Response response = await makeRequest(url);
       final userPhotos = feedNetworkModelFromJson(response.body);
@@ -60,7 +60,7 @@ class UserApi extends BaseApi {
 
   Future<List<Collections>> requestCollectionsUserPhotos(String username, int page) async {
     try {
-      String url = "/users/$username/collections?${feedQueryParametrs(page)}";
+      String url = "/users/$username/collections?${feedQueryParameters(page)}";
 
       http.Response response = await makeRequest(url);
       final userPhotos = collectionsFromJson(response.body);
@@ -77,7 +77,7 @@ class UserApi extends BaseApi {
 
   Future<List<Collections>> requestCollectionsById(int collectionsId, int page) async {
     try {
-      String url = "/users/$collectionsId/collections?${feedQueryParametrs(page)}";
+      String url = "/users/$collectionsId/collections?${feedQueryParameters(page)}";
 
       http.Response response = await makeRequest(url);
       final userPhotos = collectionsFromJson(response.body);

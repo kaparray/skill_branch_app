@@ -22,7 +22,7 @@ class AuthApi extends BaseApi {
         'grant_type': 'authorization_code',
       };
 
-      final url = '/oauth/token?${mapToQueryParametrs(queryParametrs)}';
+      final url = '/oauth/token?${mapToQueryParameters(queryParametrs)}';
 
       print('https://unsplash.com$url');
 

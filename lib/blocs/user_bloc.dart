@@ -158,7 +158,7 @@ class UserBloc extends BaseBloc {
     }
   }
 
-  double caclulateImageHeight(BuildContext context, int index, UserPhotoType type) {
+  double calculateImageHeight(BuildContext context, int index, UserPhotoType type) {
     switch (type) {
       case UserPhotoType.userPhotos:
         return (cacheUserFeed[index]?.height ?? 1.0) *

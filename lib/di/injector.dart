@@ -16,7 +16,7 @@ class FeedService {
     feedBloc.init();
   }
 
-  void killServicce() {
+  void killService() {
     feedBloc.dispose();
   }
 }

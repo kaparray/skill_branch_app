@@ -69,7 +69,7 @@ class UserPhotoState extends State<UserPhoto> with AutomaticKeepAliveClientMixin
           borderRadius: BorderRadius.circular(7),
           child: Container(
             color: AppColors.alto,
-            height: widget.userBloc.caclulateImageHeight(context, index, widget.type),
+            height: widget.userBloc.calculateImageHeight(context, index, widget.type),
             child: CachedNetworkImage(
               imageUrl: widget.userBloc.regularUserFeedPhoto(index, widget.type),
               placeholder: (context, url) => Center(

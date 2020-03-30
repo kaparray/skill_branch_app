@@ -9,12 +9,12 @@ import 'package:skill_branch_flutter/network/models/models.dart';
 class SearchApi extends BaseApi {
   Future<Search> requestSearch(String query, {int page = 1}) async {
     try {
-      Map<String, dynamic> queryParametrs = {
+      Map<String, dynamic> queryParameters = {
         'query': query,
         'page': page,
       };
 
-      String url = "/search/photos?${mapToQueryParametrs(queryParametrs)}";
+      String url = "/search/photos?${mapToQueryParameters(queryParameters)}";
 
       final response = await makeRequest(url);
       final listPhotos = Search.fromJson(json.decode(response.body));

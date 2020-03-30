@@ -11,7 +11,7 @@ import 'package:skill_branch_flutter/network/models/models.dart';
 class PhotosApi extends BaseApi {
   Future<List<FeedNetworkModel>> requestPhotos({int page = 1, OrderBy sortType = OrderBy.latest}) async {
     try {
-      String url = "/photos?${feedQueryParametrs(page)}";
+      String url = "/photos?${feedQueryParameters(page)}";
 
       final response = await makeRequest(url);
       final listPhotos = feedNetworkModelFromJson(response.body);

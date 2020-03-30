@@ -25,8 +25,8 @@ class SearchBloc extends BaseBloc {
   Future<List<FeedNetworkModel>> search(int page) async {
     try {
       if (lastSearchWord != null && lastSearchWord.isNotEmpty) {
-        final serachResult = await _api.requestSearch(lastSearchWord, page: page);
-        return serachResult.results;
+        final searchResult = await _api.requestSearch(lastSearchWord, page: page);
+        return searchResult.results;
       }
 
       return [];

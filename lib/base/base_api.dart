@@ -18,7 +18,7 @@ abstract class BaseApi {
   AppState get state => store.state;
   Object dispatch(Object action) => store.dispatch(action);
 
-  String feedQueryParametrs(int page, {int perPage}) => mapToQueryParametrs({
+  String feedQueryParameters(int page, {int perPage}) => mapToQueryParameters({
         'photos': page,
         'per_page': perPage ?? kPerPageUserPhotos,
       });
@@ -86,7 +86,7 @@ abstract class BaseApi {
     return response;
   }
 
-  String mapToQueryParametrs(
+  String mapToQueryParameters(
       Map<String, dynamic /*String|Iterable<String>*/ > queryParameters) {
     var result = StringBuffer();
     var separator = "";
@@ -117,7 +117,7 @@ abstract class BaseApi {
 }
 
 
-  String mapToQueryParametrs(
+  String mapToQueryParameters(
       Map<String, dynamic /*String|Iterable<String>*/ > queryParameters) {
     var result = StringBuffer();
     var separator = "";
