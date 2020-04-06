@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:skill_branch_flutter/base/inhereted_widget.dart';
 import 'package:redux/redux.dart';
+import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/main.dart';
 import 'package:skill_branch_flutter/redux/app/app_state.dart';
 import 'package:skill_branch_flutter/redux/bottom_navigation_bar/tab_bar_action.dart';
@@ -16,6 +17,7 @@ import 'package:skill_branch_flutter/ui/lib/tab_bar/bottom_navigation_bar.dart';
 import 'package:skill_branch_flutter/ui/screens/feed/feed.dart';
 import 'package:skill_branch_flutter/ui/screens/search/search.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
+import 'package:kiwi/kiwi.dart' as kiwi;
 
 class Home extends StatefulWidget {
   @override
@@ -146,6 +148,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void dispose() {
     connectivitySub.cancel();
+    var container = kiwi.Container();
+    container<FeedBloc>().dispose();
     super.dispose();
   }
 }

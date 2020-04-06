@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:image_downloader/image_downloader.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:skill_branch_flutter/base/base_bloc.dart';
 import 'package:skill_branch_flutter/network/api/apis.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
@@ -12,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 class ImageBloc extends BaseBloc {
   ImageBloc(this.photo);
 
-  final _api = PhotosApi();
 
   final FeedNetworkModel photo;
 
@@ -39,14 +39,14 @@ class ImageBloc extends BaseBloc {
       if (connectivityResult == ConnectivityResult.none) {
         throw StreamError.connectionError;
       } else {
-        bool liked = await _api.likeUnlikePhoto(photoId, likedByUser);
+        // bool liked = await Container()<PhotosApi>().likeUnlikePhoto(photoId, likedByUser);
 
-        if (liked)
-          photo.likes++;
-        else
-          photo.likes--;
+        // if (liked)
+        //   photo.likes++;
+        // else
+        //   photo.likes--;
 
-        return liked;
+        return true;
       }
     } else {
       dispatch(AuthUserAction());

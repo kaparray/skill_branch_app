@@ -6,7 +6,7 @@ import 'package:skill_branch_flutter/blocs/search_bloc.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/res/styles.dart';
-import 'package:skill_branch_flutter/static.dart';
+import 'package:skill_branch_flutter/globals.dart';
 import 'package:skill_branch_flutter/ui/lib/empty.dart';
 
 class SearchView extends StatefulWidget {
@@ -97,7 +97,7 @@ class SearchViewState extends State<SearchView> {
               pageLoadController: controller,
               padding: EdgeInsets.all(15.0),
               showRetry: false,
-              itemBuilder: (BuildContext context, entry, int index) => buildImage(entry),
+              itemBuilder: (BuildContext context, entry, int index) => buildImage(entry, index),
               errorBuilder: (BuildContext context, Object error) => Container(color: Colors.red),
               loadingBuilder: (BuildContext context) => CircularProgressIndicator(),
               noItemsFoundBuilder: (BuildContext context) => EmptyWidget(),
@@ -108,19 +108,24 @@ class SearchViewState extends State<SearchView> {
     );
   }
 
-  Widget buildImage(FeedNetworkModel entry) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(7),
-      child: Container(
-        color: AppColors.alto,
-        height: (entry?.height ?? 1.0) * MediaQuery.of(context).size.width / (entry?.width ?? 1.0),
-        child: CachedNetworkImage(
-          imageUrl: entry.urls?.regular ?? '',
-          placeholder: (context, url) => Center(
-            child: CircularProgressIndicator(),
+  Widget buildImage(FeedNetworkModel entry, int index) {
+    return GestureDetector(
+      onTap: () {
+        searchBloc.goToFullScreen(index);
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(7),
+        child: Container(
+          color: AppColors.alto,
+          height: (entry?.height ?? 1.0) * MediaQuery.of(context).size.width / (entry?.width ?? 1.0),
+          child: CachedNetworkImage(
+            imageUrl: entry.urls?.regular ?? '',
+            placeholder: (context, url) => Center(
+              child: CircularProgressIndicator(),
+            ),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            fit: BoxFit.cover,
           ),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          fit: BoxFit.cover,
         ),
       ),
     );

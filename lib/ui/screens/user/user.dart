@@ -1,6 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:skill_branch_flutter/base/base_state.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
@@ -8,6 +11,7 @@ import 'package:skill_branch_flutter/res/res.dart';
 import 'package:skill_branch_flutter/res/styles.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_collections.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user_photo.dart';
+import 'package:skill_branch_flutter/ui/screens/user/user_vm.dart';
 
 const double _kBorderSideWidth = 3.0;
 const double _kUserImageHeight = 72.0;
@@ -26,12 +30,12 @@ class UserProfile extends StatefulWidget {
   }
 }
 
-class UserProfileState extends State<UserProfile> with SingleTickerProviderStateMixin {
-  UserBloc userBloc;
+class UserProfileState extends BaseState<UserProfile, UserVM> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
     super.initState();
+    viewModel = UserVM();
 
     if (widget.isMyProfile) {
       UserNetworkModel userData = store.state.userState.userData;
@@ -42,12 +46,12 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
       userBloc.init();
     }
 
-    userBloc.tabController = TabController(length: 3, vsync: this);
-    userBloc.startTabListen();
+    viewModel.tabController = TabController(length: 3, vsync: this);
+    viewModel.startTabListen();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildView(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: _buildAppBar(),
@@ -67,7 +71,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
               ),
               Expanded(
                 child: TabBarView(
-                  controller: userBloc.tabController,
+                  controller: viewModel.tabController,
                   children: <Widget>[
                     UserPhoto(userBloc, UserPhotoType.userPhotos),
                     UserPhoto(userBloc, UserPhotoType.likeUserPhotos),
@@ -86,12 +90,12 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
     return AppBar(
       leading: IconButton(
         icon: Icon(CupertinoIcons.back, color: Colors.black),
-        onPressed: userBloc.pop,
+        onPressed: viewModel.pop,
       ),
       backgroundColor: AppColors.white,
       centerTitle: true,
       title: Text(
-        userBloc.username,
+        viewModel.username,
         style: TextStyle(color: Colors.black),
       ),
       elevation: 0.0,
@@ -100,7 +104,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
 
   Widget _buildHederContact() {
     return StreamBuilder(
-      stream: userBloc.userInfoStream,
+      stream: viewModel.userInfoStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Padding(
           padding: const EdgeInsets.all(10.0),
@@ -116,7 +120,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                     child: CachedNetworkImage(
                       height: _kUserImageHeight,
                       width: _kUserImageHeight,
-                      imageUrl: userBloc.largeProfileImage,
+                      imageUrl: viewModel.largeProfileImage,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -127,7 +131,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                     children: <Widget>[
                       _buildFollowers(),
                       const SizedBox(height: 11),
-                      if (userBloc.location.isNotEmpty)
+                      if (viewModel.location.isNotEmpty)
                         Row(
                           children: <Widget>[
                             Image.asset(
@@ -137,15 +141,15 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              userBloc.location,
+                              viewModel.location,
                               style: AppStyles.h5Black,
                             ),
                           ],
                         ),
                       const SizedBox(width: 8),
-                      if (userBloc.portfolioUrl != null)
+                      if (viewModel.portfolioUrl != null)
                         GestureDetector(
-                          onTap: () => userBloc.launchUrl(),
+                          onTap: () => viewModel.launchUrl(),
                           child: Row(
                             children: <Widget>[
                               Image.asset(
@@ -155,7 +159,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                userBloc.portfolioUrl,
+                                viewModel.portfolioUrl,
                                 style: AppStyles.h5Black,
                               ),
                             ],
@@ -167,7 +171,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
               ),
               const SizedBox(height: 16),
               Text(
-                userBloc.profileBio,
+                viewModel.profileBio,
                 style: AppStyles.h6,
               ),
             ],
@@ -186,7 +190,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              userBloc.followersCount,
+              viewModel.followersCount,
               style: AppStyles.h1Black.copyWith(color: AppColors.dodgerBlue),
             ),
             const SizedBox(height: 1),
@@ -201,7 +205,7 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              userBloc.followingCount,
+              viewModel.followingCount,
               style: AppStyles.h1Black.copyWith(color: AppColors.dodgerBlue),
             ),
             const SizedBox(height: 1),
@@ -217,15 +221,15 @@ class UserProfileState extends State<UserProfile> with SingleTickerProviderState
 
   Widget _buildTabBar() {
     return StreamBuilder(
-        stream: userBloc.tabStream,
+        stream: viewModel.tabStream,
         builder: (BuildContext context, snapshot) {
           return TabBar(
-            controller: userBloc.tabController,
+            controller: viewModel.tabController,
             indicatorColor: Theme.of(context).primaryColor,
             indicator: UnderlineTabIndicator(
               borderSide: BorderSide(width: _kBorderSideWidth, color: AppColors.dodgerBlue),
               insets: EdgeInsets.symmetric(
-                horizontal: userBloc.horizontalInsets(context),
+                horizontal: viewModel.horizontalInsets(context),
               ),
             ),
             tabs: [

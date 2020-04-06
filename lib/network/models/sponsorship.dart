@@ -1,4 +1,5 @@
 import 'user_network_model.dart';
+import 'dart:convert' as JSON;
 
 class Sponsorship {
   List<String> impressionUrls;
@@ -12,15 +13,13 @@ class Sponsorship {
   });
 
   factory Sponsorship.fromJson(Map<String, dynamic> json) => Sponsorship(
-        impressionUrls:
-            List<String>.from(json["impression_urls"].map((x) => x)),
-        tagline: json["tagline"],
-        sponsor: UserNetworkModel.fromJson(json["sponsor"]),
-      );
+      impressionUrls: List<String>.from(json["impression_urls"].map((x) => x)),
+      tagline: json["tagline"],
+      sponsor: UserNetworkModel.fromJson(JSON.json.decode(json["sponsor"])));
 
   Map<String, dynamic> toJson() => {
         "impression_urls": List<dynamic>.from(impressionUrls.map((x) => x)),
         "tagline": tagline,
-        "sponsor": sponsor.toJson(),
+        "sponsor": sponsor.toString(),
       };
 }

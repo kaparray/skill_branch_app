@@ -1,19 +1,19 @@
-enum Routes {
-  pop,
-  profile,
-  fullScreen,
-  webView,
-  collections,
-}
+// enum Routes {
+//   pop,
+//   profile,
+//   fullScreen,
+//   webView,
+//   collections,
+// }
 
-enum BottomSheets {
-  close,
-  auth,
-}
+// enum BottomSheets {
+//   close,
+//   auth,
+// }
 
-enum Dialogs {
-  close,
-  progress,
-  done,
-  error,
-}
+// enum Dialogs {
+//   close,
+//   progress,
+//   done,
+//   error,
+// }

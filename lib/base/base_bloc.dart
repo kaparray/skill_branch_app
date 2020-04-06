@@ -1,9 +1,8 @@
-import 'package:skill_branch_flutter/redux/app/app_state.dart';
+import 'package:skill_branch_flutter/redux/states/app_state.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
 
 abstract class BaseBloc {
   AppState get state => store.state;
-  Object dispatch(Object action) => store.dispatch(action);
 
   void init();
   void dispose() {}

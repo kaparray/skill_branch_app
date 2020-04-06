@@ -1,45 +1,21 @@
-import 'dart:convert';
+import 'package:built_redux/built_redux.dart';
+import 'package:skill_branch_flutter/redux/actions/actions.dart';
+import 'package:skill_branch_flutter/redux/middleware/middlewares.dart';
+import 'package:skill_branch_flutter/redux/reducers/reducer_builder.dart';
+import 'package:skill_branch_flutter/redux/states/app_state.dart';
+import 'package:skill_branch_flutter/globals.dart';
 
-import 'package:connectivity/connectivity.dart';
-import 'package:redux/redux.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+Store<AppState, AppStateBuilder, AppActions> _store;
 
-import 'app/app_reducer.dart';
-import 'app/app_state.dart';
-import 'navigation/navigation_middleware.dart';
-import 'user/user_middleware.dart';
-import 'user/user_state.dart';
+Store<AppState, AppStateBuilder, AppActions> get store => _store;
 
-String kUserStateKey = 'user_state_key';
-
-Store<AppState> _store;
-
-Store<AppState> get store => _store;
-
-Future<void> createStore([ConnectivityResult connectivity]) async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String crudeUserState = sharedPreferences.getString(kUserStateKey);
-  UserState userState;
-
-  try {
-    if (crudeUserState != null) {
-      Map<String, Object> crudeUserData = json.decode(crudeUserState);
-      userState = UserState.fromJson(crudeUserData);
-    }
-  } catch (ex, trace) {
-    print(ex);
-    print(trace);
-  }
-
-  ConnectivityResult connectivity = await Connectivity().checkConnectivity();
-
-  _store = Store(
-    appReducer,
-    initialState: AppState.initial(userState, connectivity),
-    distinct: true,
-    middleware: [
-      UserMiddleware(),
-      NavigationMiddleware(),
-    ],
+void initStore() {
+  _store = Store<AppState, AppStateBuilder, AppActions>(
+    reducers,
+    AppState(),
+    AppActions(),
+    middleware: middlewares,
   );
+
+  _store.actions.setNavigatorKey(navigatorKey);
 }

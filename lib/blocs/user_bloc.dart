@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Container;
+import 'package:kiwi/kiwi.dart';
 import 'package:skill_branch_flutter/base/base_bloc.dart';
 import 'package:skill_branch_flutter/network/api/apis.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
-import 'package:skill_branch_flutter/redux/navigation/navigation_actions.dart';
-import 'package:skill_branch_flutter/redux/navigation/routes.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
 
@@ -16,18 +15,9 @@ class UserBloc extends BaseBloc {
   UserBloc(this._cacheUserInfo) {
     _userInfoController.add(StreamData(data: _cacheUserInfo));
   }
-  TabController tabController;
 
-  final _tabStreamController = StreamController<int>();
-  Stream<int> get tabStream => _tabStreamController.stream;
-
-  final _api = UserApi();
-
-  final StreamController<StreamData<UserNetworkModel>> _userInfoController = StreamController();
-  Stream<StreamData<UserNetworkModel>> get userInfoStream => _userInfoController.stream;
 
   UserNetworkModel _cacheUserInfo;
-  List<FeedNetworkModel> cacheUserFeed = [];
   List<FeedNetworkModel> cacheLikeUserFeed = [];
   List<Collections> cacheCollectionsUserFeed = [];
 
@@ -36,19 +26,11 @@ class UserBloc extends BaseBloc {
     getUserInfo();
   }
 
-  void startTabListen() {
-    tabController.addListener(() {
-      _tabStreamController.add(tabController.index);
-    });
-  }
+
 
   @override
   dispose() {
     _userInfoController.close();
-  }
-
-  void pop() {
-    store.dispatch(RouteTo(Routes.pop));
   }
 
   Future<void> getUserInfo() async {
@@ -61,7 +43,7 @@ class UserBloc extends BaseBloc {
       if (connectivityResult == ConnectivityResult.none) {
         _userInfoController.add(StreamData(error: StreamError.connectionError));
       } else {
-        UserNetworkModel userInfo = await _api.requestUserInfo(username);
+        UserNetworkModel userInfo = await Container()<UserApi>().requestUserInfo(username);
         _userInfoController.add(StreamData(data: userInfo));
         _cacheUserInfo = userInfo;
       }
@@ -77,8 +59,8 @@ class UserBloc extends BaseBloc {
     if (connectivityResult == ConnectivityResult.none)
       return [];
     else {
-      List<FeedNetworkModel> userFeed = await _api.requestUserPhotos(username, index);
-      cacheUserFeed.addAll(userFeed);
+      List<FeedNetworkModel> userFeed = await Container()<UserApi>().requestUserPhotos(username, index);
+      dispatch(UpdateUserFeed(userFeed));
 
       return userFeed;
     }
@@ -90,7 +72,7 @@ class UserBloc extends BaseBloc {
     if (connectivityResult == ConnectivityResult.none)
       return [];
     else {
-      List<FeedNetworkModel> userFeed = await _api.requestLikeUserPhotos(username, index);
+      List<FeedNetworkModel> userFeed = await Container()<UserApi>().requestLikeUserPhotos(username, index);
       cacheLikeUserFeed.addAll(userFeed);
 
       return userFeed;
@@ -103,7 +85,7 @@ class UserBloc extends BaseBloc {
     if (connectivityResult == ConnectivityResult.none)
       return [];
     else {
-      List<Collections> userFeed = await _api.requestCollectionsUserPhotos(username, index);
+      List<Collections> userFeed = await Container()<UserApi>().requestCollectionsUserPhotos(username, index);
       cacheCollectionsUserFeed.addAll(userFeed);
 
       return userFeed;
@@ -122,86 +104,53 @@ class UserBloc extends BaseBloc {
     return MediaQuery.of(context).size.width / 3 - 24;
   }
 
-  void goToCollections(int index) {
-    store.dispatch(RouteTo(Routes.collections, payload: cacheCollectionsUserFeed[index]));
+  
+  
+
+  double calculateImageHeight(BuildContext context, int index) {
+    // switch (type) {
+    //   case UserPhotoType.userPhotos:
+    //     return (state.userState.userPhoto[index]?.height ?? 1.0) *
+    //         MediaQuery.of(context).size.width /
+    //         (state.userState.userPhoto[index]?.width ?? 1.0);
+    //   case UserPhotoType.userPhotos:
+    //     return (cacheLikeUserFeed[index]?.height ?? 1.0) *
+    //         MediaQuery.of(context).size.width /
+    //         (state.userState.userPhoto[index]?.width ?? 1.0);
+    //   case UserPhotoType.userCollections:
+    //     if (cacheCollectionsUserFeed.length > index) {
+    //       return (cacheCollectionsUserFeed[index].coverPhoto?.height ?? 1.0) *
+    //           MediaQuery.of(context).size.width /
+    //           (cacheCollectionsUserFeed[index].coverPhoto?.width ?? 1.0);
+    //     }
+
+    //     return 0;
+    //   default:
+    //     return 0;
+    // }
   }
 
-  get portfolioUrl {
-    if (_cacheUserInfo?.portfolioUrl != null) {
-      return _cacheUserInfo?.portfolioUrl?.replaceFirst('https://', '')?.replaceFirst('http://', '');
-    }
-  }
-
-  String get profileBio => _cacheUserInfo?.bio ?? '';
-  String get followersCount => '${_cacheUserInfo?.followersCount ?? ''}';
-  String get followingCount => '${_cacheUserInfo?.followingCount ?? ''}';
-  String get name => _cacheUserInfo?.name ?? '';
-  String get username => _cacheUserInfo?.username ?? '';
-  String get largeProfileImage => _cacheUserInfo?.profileImage?.large?.replaceAll('128', '288') ?? '';
-  String get location => _cacheUserInfo?.location ?? '';
-
-  String regularUserFeedPhoto(int index, UserPhotoType type) {
-    switch (type) {
-      case UserPhotoType.userPhotos:
-        return cacheUserFeed[index].urls?.regular ?? '';
-      case UserPhotoType.userPhotos:
-        return cacheLikeUserFeed[index].urls?.regular ?? '';
-      case UserPhotoType.userCollections:
-        if (cacheCollectionsUserFeed.length > index) {
-          return (cacheCollectionsUserFeed[index]?.previewPhotos?.length ?? -1) >= 3
-              ? (cacheCollectionsUserFeed[index]?.previewPhotos[2]?.urls?.regular ?? '')
-              : '';
-        }
-        return '';
-      default:
-        return '';
-    }
-  }
-
-  double calculateImageHeight(BuildContext context, int index, UserPhotoType type) {
-    switch (type) {
-      case UserPhotoType.userPhotos:
-        return (cacheUserFeed[index]?.height ?? 1.0) *
-            MediaQuery.of(context).size.width /
-            (cacheUserFeed[index]?.width ?? 1.0);
-      case UserPhotoType.userPhotos:
-        return (cacheLikeUserFeed[index]?.height ?? 1.0) *
-            MediaQuery.of(context).size.width /
-            (cacheUserFeed[index]?.width ?? 1.0);
-      case UserPhotoType.userCollections:
-        if (cacheCollectionsUserFeed.length > index) {
-          return (cacheCollectionsUserFeed[index].coverPhoto?.height ?? 1.0) *
-              MediaQuery.of(context).size.width /
-              (cacheCollectionsUserFeed[index].coverPhoto?.width ?? 1.0);
-        }
-
-        return 0;
-      default:
-        return 0;
-    }
-  }
-
-  void goToFullScreen(int index, UserPhotoType type) {
-    switch (type) {
-      case UserPhotoType.userPhotos:
-        store.dispatch(RouteTo(
-          Routes.fullScreen,
-          payload: {'photo': cacheUserFeed[index], 'heroTag': 'cacheUserFeed$index'},
-        ));
-        break;
-      case UserPhotoType.userPhotos:
-        store.dispatch(RouteTo(
-          Routes.fullScreen,
-          payload: {'photo': cacheLikeUserFeed[index], 'heroTag': 'cacheLikeUserFeed$index'},
-        ));
-        break;
-      case UserPhotoType.userCollections:
-        store.dispatch(RouteTo(
-          Routes.fullScreen,
-          payload: {'photo': cacheCollectionsUserFeed[index], 'heroTag': 'cacheCollectionsUserFeed$index'},
-        ));
-        break;
-      default:
-    }
+  void goToFullScreen(int index) {
+    // switch (type) {
+    //   case UserPhotoType.userPhotos:
+    //     store.dispatch(RouteTo(
+    //       Routes.fullScreen,
+    //       payload: {'photo': state.userState.userPhoto[index], 'heroTag': 'cacheUserFeed$index'},
+    //     ));
+    //     break;
+    //   case UserPhotoType.likeUserPhotos:
+    //     store.dispatch(RouteTo(
+    //       Routes.fullScreen,
+    //       payload: {'photo': cacheLikeUserFeed[index], 'heroTag': 'cacheLikeUserFeed$index'},
+    //     ));
+    //     break;
+    //   case UserPhotoType.userCollections:
+    //     store.dispatch(RouteTo(
+    //       Routes.fullScreen,
+    //       payload: {'photo': cacheCollectionsUserFeed[index], 'heroTag': 'cacheCollectionsUserFeed$index'},
+    //     ));
+    //     break;
+    //   default:
+    // }
   }
 }

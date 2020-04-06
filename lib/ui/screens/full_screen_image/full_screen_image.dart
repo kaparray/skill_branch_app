@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:skill_branch_flutter/blocs/image_bloc.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
+import 'package:skill_branch_flutter/redux/app/app_state.dart';
 import 'package:skill_branch_flutter/res/res.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -10,25 +12,26 @@ import 'package:skill_branch_flutter/ui/lib/like_button.dart';
 
 const double _kImageSize = 42;
 
-class FullScreenImage extends StatefulWidget {
-  FullScreenImage({this.heroTag, this.photo});
+class FullScreenImage<StateT> extends StatefulWidget {
+  FullScreenImage({this.heroTag, this.listState, this.index});
 
   final String heroTag;
-  final FeedNetworkModel photo;
+  final StateT listState;
+  final int index;
 
   @override
   State<StatefulWidget> createState() {
-    return FullScreenImageState();
+    return FullScreenImageState<StateT>();
   }
 }
 
-class FullScreenImageState extends State<FullScreenImage> {
+class FullScreenImageState<StateT> extends State<FullScreenImage> {
   ImageBloc imageBloc;
 
   @override
   void initState() {
     super.initState();
-    imageBloc = ImageBloc(widget.photo);
+    imageBloc = ImageBloc(widget.listState[widget.index]);
   }
 
   @override
@@ -63,10 +66,55 @@ class FullScreenImageState extends State<FullScreenImage> {
   }
 
   Widget _buildLikeButton() {
-    return LikeButton(
-      likeCount: imageBloc.likes,
-      isLiked: imageBloc.likedByUser,
-      likePhoto: () => imageBloc.likePhoto(),
+    // return LikeButton(
+    //   likeCount: imageBloc.likes,
+    //   isLiked: imageBloc.likedByUser,
+    //   likePhoto: () => imageBloc.likePhoto(),
+    // );
+
+    return StoreConnector<AppState, StateT>(
+      converter: (store) {
+        return widget.listState;
+      },
+      onWillChange: (_, __) {
+        print("9999 = $__");
+      },
+      builder: (BuildContext context, StateT state) {
+        print("00000000 = ${state}");
+
+        return GestureDetector(
+         // onTap: () => feedBloc.likePhoto(index),
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/icons/like.png',
+                    width: 21,
+                    height: 18.3,
+                    color: state[widget.index].likedByUser ? Colors.red : Colors.black,
+                  ),
+                  SizedBox(width: 4.21),
+                  Text(
+                    state[widget.index].likes.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF000000),
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Roboto',
+                      fontStyle: FontStyle.normal,
+                      fontSize: 14,
+                      height: 16 / 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

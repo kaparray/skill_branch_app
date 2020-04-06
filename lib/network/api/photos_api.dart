@@ -26,14 +26,17 @@ class PhotosApi extends BaseApi {
     }
   }
 
-  Future<bool> likeUnlikePhoto(String photoId, bool isLike) async {
+  Future<Like> likeUnlikePhoto(String photoId, bool isLike) async {
     try {
       Response response;
       String url = "/photos/$photoId/like";
-
+      print(isLike);
+      
       if (isLike) {
+        print("RequestType.delete");
         response = await makeRequest(url, type: RequestType.delete);
       } else {
+        print("RequestType.post");
         response = await makeRequest(url, type: RequestType.post);
       }
 
@@ -45,8 +48,10 @@ class PhotosApi extends BaseApi {
       }
 
       final photo = Like.fromJson(json.decode(response.body));
-      print('photo = ${response.body}');
-      return photo.photo.likedByUser;
+      print('likedByUser = ${photo.photo.likedByUser}');
+      print('likedByUser = ${photo.photo.likes}');
+
+      return photo;
     } catch (ex, trace) {
       debugPrint("${DateTime.now()} ex: $ex");
       debugPrint("${DateTime.now()} trace: $trace");

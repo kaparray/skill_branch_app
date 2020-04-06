@@ -1,7 +1,6 @@
 import 'collection_links.dart';
 import 'cover_photo.dart';
 import 'preview_photo.dart';
-import 'tag_model.dart';
 import 'user_model.dart';
 
 class Collections {
@@ -15,7 +14,6 @@ class Collections {
   int totalPhotos;
   bool private;
   String shareKey;
-  List<Tag> tags;
   CollectionLinks links;
   User user;
   CoverPhoto coverPhoto;
@@ -32,7 +30,6 @@ class Collections {
     this.totalPhotos,
     this.private,
     this.shareKey,
-    this.tags,
     this.links,
     this.user,
     this.coverPhoto,
@@ -52,14 +49,10 @@ class Collections {
       totalPhotos: json["total_photos"],
       private: json["private"],
       shareKey: json["share_key"],
-      tags: List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
-      links: json['links'] != null
-          ? CollectionLinks.fromJson(json["links"])
-          : null,
+      links: json['links'] != null ? CollectionLinks.fromJson(json["links"]) : null,
       user: User.fromJson(json["user"]),
       coverPhoto: CoverPhoto.fromJson(json["cover_photo"]),
-      previewPhotos: List<PreviewPhoto>.from(
-          json["preview_photos"].map((x) => PreviewPhoto.fromJson(x))),
+      previewPhotos: List<PreviewPhoto>.from(json["preview_photos"].map((x) => PreviewPhoto.fromJson(x))),
     );
   }
 
@@ -74,11 +67,9 @@ class Collections {
         "total_photos": totalPhotos,
         "private": private,
         "share_key": shareKey,
-        "tags": List<dynamic>.from(tags.map((x) => x.toJson())),
         "links": links.toJson(),
         "user": user.toJson(),
         "cover_photo": coverPhoto.toJson(),
-        "preview_photos":
-            List<dynamic>.from(previewPhotos.map((x) => x.toJson())),
+        "preview_photos": List<dynamic>.from(previewPhotos.map((x) => x.toJson())),
       };
 }

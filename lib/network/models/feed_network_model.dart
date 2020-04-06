@@ -117,7 +117,7 @@ class FeedNetworkModel {
         "liked_by_user": likedByUser,
         "current_user_collections":
             List<dynamic>.from(currentUserCollections.map((x) => x)),
-        "user": user.toJson(),
+        "user": user.toString(),
         "sponsorship": sponsorship == null ? null : sponsorship.toJson(),
       };
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +13,7 @@ class UserApi extends BaseApi {
       String url = "/users/$username";
 
       http.Response response = await makeRequest(url);
-      final userInfo = userNetworkModelFromJson(response.body);
+      final userInfo = UserNetworkModel.fromJson(json.decode(response.body));
 
       return userInfo;
     } catch (ex, trace) {

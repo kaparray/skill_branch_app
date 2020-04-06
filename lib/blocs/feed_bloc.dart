@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Container;
+import 'package:kiwi/kiwi.dart';
 import 'package:skill_branch_flutter/base/base_bloc.dart';
 import 'package:skill_branch_flutter/network/api/apis.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
+import 'package:skill_branch_flutter/redux/feed/feed_actions.dart';
 import 'package:skill_branch_flutter/redux/navigation/navigation_actions.dart';
 import 'package:skill_branch_flutter/redux/navigation/routes.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
@@ -13,9 +15,11 @@ import 'package:skill_branch_flutter/redux/user/user_actions.dart';
 enum OrderBy { latest, oldest, popular }
 
 class FeedBloc extends BaseBloc {
-  final _api = PhotosApi();
   final allPhotos = List<FeedNetworkModel>();
   int pageIndex = 1;
+
+  @override
+  void init() {}
 
   Future<List<FeedNetworkModel>> getPhotos({sortType = OrderBy.latest}) async {
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -23,21 +27,21 @@ class FeedBloc extends BaseBloc {
     if (connectivityResult == ConnectivityResult.none) {
       throw StreamError.connectionError;
     } else {
-      final listPhoto = await _api.requestPhotos(
+      final listPhoto = await Container()<PhotosApi>().requestPhotos(
         page: pageIndex,
         sortType: sortType,
       );
       pageIndex++;
 
+      store.dispatch(UpdateFeed(listPhoto));
       allPhotos.addAll(listPhoto);
 
       return listPhoto;
     }
   }
 
-  Future<bool> likePhoto(int index) async {
-    final id = allPhotos[index].id;
-    var likedByUser = this.likedByUser(index);
+  void likePhoto(int index) async {
+    final id = store.state.feedState.feed[index].id;
 
     if (state.userState.isAuth) {
       var connectivityResult = await Connectivity().checkConnectivity();
@@ -45,21 +49,15 @@ class FeedBloc extends BaseBloc {
       if (connectivityResult == ConnectivityResult.none) {
         throw StreamError.connectionError;
       } else {
-        likedByUser = await _api.likeUnlikePhoto(id, likedByUser);
-        allPhotos[index].likedByUser = likedByUser;
+        print("11111 = ${store.state.feedState.feed[index].likedByUser}");
+        Like likedByUser =
+            await Container()<PhotosApi>().likeUnlikePhoto(id, store.state.feedState.feed[index].likedByUser);
 
-        if (likedByUser)
-          allPhotos[index].likes++;
-        else
-          allPhotos[index].likes--;
-
-        return likedByUser;
+        store.dispatch(UpdateFeedItem(likedByUser.photo, index));
       }
     } else {
       dispatch(AuthUserAction());
     }
-
-    return likedByUser;
   }
 
   void goToUserScreen(int index) {
@@ -89,7 +87,4 @@ class FeedBloc extends BaseBloc {
   String name(int index) => allPhotos[index]?.user?.name ?? 'No name :(';
   String download(int index) => allPhotos[index].links?.download ?? '';
   String html(int index) => allPhotos[index].links?.html ?? '';
-
-  @override
-  void init() {}
 }

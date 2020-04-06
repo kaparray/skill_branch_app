@@ -17,7 +17,6 @@ export 'profile_image.dart';
 export 'search_model.dart';
 export 'source_model.dart';
 export 'sponsorship.dart';
-export 'tag_model.dart';
 export 'urls_photo.dart';
 export 'user_links.dart';
 export 'user_model.dart';

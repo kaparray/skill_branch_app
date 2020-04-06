@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:loadmore/loadmore.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/base/inhereted_widget.dart';
-import 'package:skill_branch_flutter/di/injector.dart';
+import 'package:skill_branch_flutter/redux/app/app_state.dart';
+import 'package:skill_branch_flutter/redux/feed/feed_state.dart';
+import 'package:skill_branch_flutter/redux/store.dart';
 import 'package:skill_branch_flutter/res/colors.dart';
 import 'package:skill_branch_flutter/res/styles.dart';
-import 'package:skill_branch_flutter/ui/lib/like_button.dart';
 
 import 'package:kiwi/kiwi.dart' as kiwi;
 
@@ -25,12 +27,13 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
   void initState() {
     super.initState();
     var container = kiwi.Container();
-    feedBloc = container<FeedService>().feedBloc;
+    feedBloc = container<FeedBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return LoadMore(
       delegate: DefaultLoadMoreDelegate(),
       textBuilder: DefaultLoadMoreTextBuilder.english,
@@ -49,7 +52,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
             ],
           );
         },
-        itemCount: feedBloc.allPhotos.length,
+        itemCount: store.state.feedState.feed.length,
       ),
     );
   }
@@ -66,7 +69,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Text(
-                feedBloc.altDescription(index),
+                store.state.feedState.feed[index].altDescription,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: AppStyles.h3.copyWith(color: AppColors.manatee),
@@ -92,11 +95,11 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    feedBloc.username(index),
+                    store.state.feedState?.feed[index]?.user?.name ?? '',
                     style: AppStyles.h2Black,
                   ),
                   Text(
-                    "@${feedBloc.username(index)}",
+                    store.state.feedState?.feed[index]?.user?.username ?? '',
                     style: AppStyles.h5Black.copyWith(color: AppColors.manatee),
                   ),
                 ],
@@ -110,10 +113,53 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
   }
 
   Widget _buildLikeButton(int index) {
-    return LikeButton(
-      likeCount: feedBloc.likes(index),
-      isLiked: feedBloc.likedByUser(index),
-      likePhoto: () => feedBloc.likePhoto(index),
+    store.onChange.listen((data) {
+      print("data = ${data.feedState.feed}");
+    });
+
+    return StoreConnector<AppState, FeedState>(
+      converter: (store) {
+        return store.state.feedState;
+      },
+      onWillChange: (_, __) {
+        print("9999 = $__");
+      },
+      builder: (BuildContext context, FeedState state) {
+        print("00000000 = ${state}");
+
+        return GestureDetector(
+          onTap: () => feedBloc.likePhoto(index),
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/icons/like.png',
+                    width: 21,
+                    height: 18.3,
+                    color: store.state.feedState.feed[index].likedByUser ? Colors.red : Colors.black,
+                  ),
+                  SizedBox(width: 4.21),
+                  Text(
+                    store.state.feedState.feed[index].likes.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF000000),
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Roboto',
+                      fontStyle: FontStyle.normal,
+                      fontSize: 14,
+                      height: 16 / 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

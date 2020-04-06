@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_built_redux/flutter_built_redux.dart';
 import 'package:skill_branch_flutter/app.dart';
 import 'package:skill_branch_flutter/redux/store.dart';
 
-import 'package:kiwi/kiwi.dart' as kiwi;
 import 'di/injector.dart';
 
 StreamSubscription connectivitySub;
@@ -12,10 +12,7 @@ StreamSubscription connectivitySub;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await createStore();
-  setup();
-  var container = kiwi.Container();
-  container<FeedService>().initService();
+  await Injector().configureApp();
 
-  runApp(App(store));
+  runApp(ReduxProvider(store: store, child: App()));
 }

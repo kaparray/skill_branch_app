@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Container;
+import 'package:kiwi/kiwi.dart';
 import 'package:skill_branch_flutter/base/base_bloc.dart';
 import 'package:skill_branch_flutter/network/api/apis.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
@@ -15,7 +16,6 @@ class CollectionBloc extends BaseBloc {
 
   List<FeedNetworkModel> cacheCollectionPhoto = [];
 
-  final _api = CollectionApi();
 
   @override
   void init() {}
@@ -39,7 +39,7 @@ class CollectionBloc extends BaseBloc {
       _collectionPhotoController.add(StreamData(error: StreamError.connectionError));
       return [];
     } else {
-      List<FeedNetworkModel> userFeed = await _api.requestCollectionsPhotos(id, index);
+      List<FeedNetworkModel> userFeed = await Container()<CollectionApi>().requestCollectionsPhotos(id, index);
 
       cacheCollectionPhoto.addAll(userFeed);
       _collectionPhotoController.add(StreamData(data: cacheCollectionPhoto));

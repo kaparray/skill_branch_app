@@ -4,7 +4,7 @@ import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:skill_branch_flutter/blocs/blocs.dart';
 import 'package:skill_branch_flutter/network/models/models.dart';
 import 'package:skill_branch_flutter/res/res.dart';
-import 'package:skill_branch_flutter/static.dart';
+import 'package:skill_branch_flutter/globals.dart';
 import 'package:skill_branch_flutter/ui/lib/empty.dart';
 import 'package:skill_branch_flutter/ui/lib/error.dart';
 import 'package:skill_branch_flutter/ui/screens/user/user.dart';
